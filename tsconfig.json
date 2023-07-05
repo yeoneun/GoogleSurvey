@@ -5,7 +5,8 @@
     "baseUrl": "./src",
     "paths": {
       "@components/*": ["components/*"],
-      "@screens/*": ["screens/*"]
+      "@screens/*": ["screens/*"],
+      "@styles/*": ["styles/*"]
     }
   },
   "exclude": ["node_modules", "babel.config.js", "metro.config.js", "jest.config.js"]
