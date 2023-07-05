@@ -5,7 +5,7 @@ import Head from "./components/Head";
 
 export default function HomeScreen() {
   return (
-    <ScrollView style={{ flex: 1 }}>
+    <ScrollView style={{ flex: 1 }} keyboardShouldPersistTaps="handled">
       <SafeAreaView>
         <Wrapper>
           <Head containerStyle={{ marginTop: 10 }} />
