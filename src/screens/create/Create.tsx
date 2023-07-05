@@ -4,7 +4,7 @@ import Wrapper from "@components/layout/Wrapper";
 import Head from "./components/Head";
 import { Ionicons } from "@expo/vector-icons";
 import GlobalStyle from "@styles/GlobalStyles";
-import FormList from "./components/FormList";
+import Form from "./components/Form";
 
 export default function HomeScreen() {
   const addForm = () => {};
@@ -13,8 +13,8 @@ export default function HomeScreen() {
       <ScrollView style={layout.scrollView} keyboardShouldPersistTaps="handled">
         <SafeAreaView>
           <Wrapper>
-            <Head containerStyle={layout.head} />
-            <FormList />
+            <Head />
+            <Form />
           </Wrapper>
         </SafeAreaView>
       </ScrollView>
@@ -27,7 +27,6 @@ export default function HomeScreen() {
 
 const layout = StyleSheet.create({
   scrollView: { flex: 1 },
-  head: { marginTop: 10 },
 });
 
 const addButton = StyleSheet.create({

@@ -1,14 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
-import { View, StyleSheet, TextInput, Animated, ViewStyle } from "react-native";
+import { StyleSheet, TextInput, Animated, ViewStyle } from "react-native";
 import GlobalStyle from "styles/GlobalStyles";
 import TextDecoration from "@components/form/TextDecoration";
+import Container from "./Container";
 
-interface Props {
-  containerStyle?: ViewStyle;
-}
-export default function Head(props: Props) {
-  const { containerStyle } = props;
-
+export default function Head() {
   const [title, setTitle] = useState("제목 없는 설문지");
   const [description, setDescription] = useState("");
   const [titleFocus, setTitleFocus] = useState(false);
@@ -80,7 +76,7 @@ export default function Head(props: Props) {
   }, [descriptionFocus]);
 
   return (
-    <View style={[layout.container, containerStyle]}>
+    <Container style={layout.container}>
       <Animated.View style={[titleArea.container, { marginTop: titleAreaMarginTop }]}>
         <TextInput
           value={title}
@@ -111,7 +107,7 @@ export default function Head(props: Props) {
           <TextDecoration />
         </Animated.View>
       </Animated.View>
-    </View>
+    </Container>
   );
 }
 
@@ -128,13 +124,9 @@ const sharedStyles = {
 
 const layout = StyleSheet.create({
   container: {
-    backgroundColor: "#fff",
-    padding: 27,
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: GlobalStyle.gray.borderColor,
     borderTopColor: GlobalStyle.point.color,
     borderTopWidth: 8,
+    marginTop: 10,
   },
 });
 
