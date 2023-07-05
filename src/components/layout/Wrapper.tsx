@@ -1,9 +1,8 @@
-import * as React from "react";
-import { Text, View, StyleSheet, TextInput } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import React, { ReactNode } from "react";
+import { View, StyleSheet } from "react-native";
 
 interface Props {
-  children: JSX.Element;
+  children: ReactNode;
 }
 export default function Wrapper(props: Props) {
   const { children } = props;

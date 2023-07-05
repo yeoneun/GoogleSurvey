@@ -4,6 +4,7 @@ import Wrapper from "@components/layout/Wrapper";
 import Head from "./components/Head";
 import { Ionicons } from "@expo/vector-icons";
 import GlobalStyle from "@styles/GlobalStyles";
+import FormList from "./components/FormList";
 
 export default function HomeScreen() {
   const addForm = () => {};
@@ -13,6 +14,7 @@ export default function HomeScreen() {
         <SafeAreaView>
           <Wrapper>
             <Head containerStyle={layout.head} />
+            <FormList />
           </Wrapper>
         </SafeAreaView>
       </ScrollView>
