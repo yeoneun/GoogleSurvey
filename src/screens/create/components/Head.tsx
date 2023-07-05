@@ -21,53 +21,61 @@ export default function Head(props: Props) {
 
   useEffect(() => {
     if (titleFocus) {
-      Animated.timing(titleAreaMarginTop, {
-        toValue: 24,
-        duration: 300,
-        useNativeDriver: false,
-      }).start();
-      Animated.timing(titleAreaDecorationHeight, {
-        toValue: 37,
-        duration: 300,
-        useNativeDriver: false,
-      }).start();
+      Animated.parallel([
+        Animated.timing(titleAreaMarginTop, {
+          toValue: 24,
+          duration: 300,
+          useNativeDriver: false,
+        }),
+        Animated.timing(titleAreaDecorationHeight, {
+          toValue: 37,
+          duration: 300,
+          useNativeDriver: false,
+        }),
+      ]).start();
     } else {
-      Animated.timing(titleAreaMarginTop, {
-        toValue: 0,
-        duration: 300,
-        useNativeDriver: false,
-      }).start();
-      Animated.timing(titleAreaDecorationHeight, {
-        toValue: 0,
-        duration: 300,
-        useNativeDriver: false,
-      }).start();
+      Animated.parallel([
+        Animated.timing(titleAreaMarginTop, {
+          toValue: 0,
+          duration: 300,
+          useNativeDriver: false,
+        }),
+        Animated.timing(titleAreaDecorationHeight, {
+          toValue: 0,
+          duration: 300,
+          useNativeDriver: false,
+        }),
+      ]).start();
     }
   }, [titleFocus]);
 
   useEffect(() => {
     if (descriptionFocus) {
-      Animated.timing(descriptionAreaMarginTop, {
-        toValue: 24,
-        duration: 300,
-        useNativeDriver: false,
-      }).start();
-      Animated.timing(descriptionAreaDecorationHeight, {
-        toValue: 37,
-        duration: 300,
-        useNativeDriver: false,
-      }).start();
+      Animated.parallel([
+        Animated.timing(descriptionAreaMarginTop, {
+          toValue: 24,
+          duration: 300,
+          useNativeDriver: false,
+        }),
+        Animated.timing(descriptionAreaDecorationHeight, {
+          toValue: 37,
+          duration: 300,
+          useNativeDriver: false,
+        }),
+      ]).start();
     } else {
-      Animated.timing(descriptionAreaMarginTop, {
-        toValue: 10,
-        duration: 300,
-        useNativeDriver: false,
-      }).start();
-      Animated.timing(descriptionAreaDecorationHeight, {
-        toValue: 0,
-        duration: 300,
-        useNativeDriver: false,
-      }).start();
+      Animated.parallel([
+        Animated.timing(descriptionAreaMarginTop, {
+          toValue: 10,
+          duration: 300,
+          useNativeDriver: false,
+        }),
+        Animated.timing(descriptionAreaDecorationHeight, {
+          toValue: 0,
+          duration: 300,
+          useNativeDriver: false,
+        }),
+      ]).start();
     }
   }, [descriptionFocus]);
 
@@ -82,6 +90,7 @@ export default function Head(props: Props) {
           onFocus={() => setTitleFocus(true)}
           onBlur={() => setTitleFocus(false)}
           style={[titleArea.textInput, titleFocus && titleArea.textInputFocus]}
+          multiline
         />
         <Animated.View style={[{ overflow: "hidden" }, { height: titleAreaDecorationHeight }]}>
           <TextDecoration />
@@ -96,6 +105,7 @@ export default function Head(props: Props) {
           onFocus={() => setDescriptionFocus(true)}
           onBlur={() => setDescriptionFocus(false)}
           style={[descriptionArea.textInput, descriptionFocus && descriptionArea.textInputFocus]}
+          multiline
         />
         <Animated.View style={[{ overflow: "hidden" }, { height: descriptionAreaDecorationHeight }]}>
           <TextDecoration />
@@ -104,6 +114,17 @@ export default function Head(props: Props) {
     </View>
   );
 }
+
+const sharedStyles = {
+  input: {
+    borderBottomWidth: 1,
+    borderColor: GlobalStyle.gray.borderColor,
+  },
+  inputFocus: {
+    borderBottomWidth: 2,
+    borderColor: GlobalStyle.point.color,
+  },
+};
 
 const layout = StyleSheet.create({
   container: {
@@ -120,22 +141,22 @@ const layout = StyleSheet.create({
 const titleArea = StyleSheet.create({
   container: {},
   textInput: {
+    ...sharedStyles.input,
     fontSize: 28,
     fontWeight: "500",
     paddingVertical: 28 * 0.2,
-    borderBottomWidth: 1,
-    borderColor: GlobalStyle.gray.borderColor,
   },
-  textInputFocus: { borderBottomWidth: 2, borderColor: GlobalStyle.point.color },
+  textInputFocus: sharedStyles.inputFocus,
 });
 
 const descriptionArea = StyleSheet.create({
   container: { marginTop: 10 },
   textInput: {
+    ...sharedStyles.input,
     fontSize: 15,
     paddingVertical: 15 * 0.2,
     borderBottomWidth: 1,
     borderColor: GlobalStyle.gray.borderColor,
   },
-  textInputFocus: { borderBottomWidth: 2, borderColor: GlobalStyle.point.color },
+  textInputFocus: sharedStyles.inputFocus,
 });
