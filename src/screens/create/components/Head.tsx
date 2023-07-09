@@ -3,10 +3,16 @@ import { StyleSheet, TextInput, Animated, ViewStyle } from "react-native";
 import GlobalStyle from "styles/GlobalStyles";
 import TextDecoration from "@components/form/TextDecoration";
 import Container from "./Container";
+import { useAppDispatch, useAppSelector } from "hooks/useRedux";
+import { setDescription, setTitle } from "utils/redux/slices/formSlice";
 
 export default function Head() {
-  const [title, setTitle] = useState("제목 없는 설문지");
-  const [description, setDescription] = useState("");
+  const form = useAppSelector((state) => state.form);
+  const dispatch = useAppDispatch();
+
+  const dispatchTitle = (value: string) => dispatch(setTitle(value));
+  const dispatchDescription = (value: string) => dispatch(setDescription(value));
+
   const [titleFocus, setTitleFocus] = useState(false);
   const [descriptionFocus, setDescriptionFocus] = useState(false);
 
@@ -79,8 +85,8 @@ export default function Head() {
     <Container style={layout.container}>
       <Animated.View style={[titleArea.container, { marginTop: titleAreaMarginTop }]}>
         <TextInput
-          value={title}
-          onChangeText={setTitle}
+          value={form.title}
+          onChangeText={dispatchTitle}
           placeholder="설문지 제목"
           placeholderTextColor={GlobalStyle.placeholder.color}
           onFocus={() => setTitleFocus(true)}
@@ -94,8 +100,8 @@ export default function Head() {
       </Animated.View>
       <Animated.View style={[descriptionArea.container, { marginTop: descriptionAreaMarginTop }]}>
         <TextInput
-          value={description}
-          onChangeText={setDescription}
+          value={form.description}
+          onChangeText={dispatchDescription}
           placeholder="설문지 설명"
           placeholderTextColor={GlobalStyle.placeholder.color}
           onFocus={() => setDescriptionFocus(true)}
