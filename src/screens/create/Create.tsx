@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
 import {
   SafeAreaView,
   ScrollView,
@@ -31,15 +31,16 @@ export default function Create(props: Props) {
   const form = useAppSelector((state) => state.form);
   const dispatch = useAppDispatch();
 
-  const [currentFormIndex, setCurrentFormIndex] = useState(0);
-
-  const openFormTypeSheet = (formIndex: number) => {
+  const openFormTypeSheet = () => {
     Keyboard.dismiss();
-    setCurrentFormIndex(formIndex);
     formTypeSheet.current?.expand();
   };
   const dispatchFormType = (type: FormTypes) => {
-    dispatch(setFormType({ index: currentFormIndex, value: type }));
+    const formIndex = form.forms.findIndex((item) => item.focused);
+    if (formIndex < 0) {
+      return;
+    }
+    dispatch(setFormType({ index: formIndex, value: type }));
     formTypeSheet.current?.close();
   };
   const goPreview = () => {
