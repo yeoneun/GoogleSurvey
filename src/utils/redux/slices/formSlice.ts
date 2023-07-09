@@ -89,6 +89,11 @@ export const formSlice = createSlice({
       const { index, optionIndex } = action.payload;
       state.forms[index].options!.splice(optionIndex, 1);
     },
+    setFormOptionLabel: (state, action: PayloadAction<{ index: number; optionIndex: number; value: string }>) => {
+      console.log("setFormOptionLabel", action.payload);
+      const { index, optionIndex, value } = action.payload;
+      state.forms[index].options![optionIndex].label = value;
+    },
     setNecessary: (state, action: PayloadAction<{ index: number; value: boolean }>) => {
       console.log("setNecessary", action.payload);
       const { index, value } = action.payload;
@@ -107,6 +112,7 @@ export const {
   setEtcUsage,
   addFormOption,
   removeFormOption,
+  setFormOptionLabel,
   setNecessary,
 } = formSlice.actions;
 

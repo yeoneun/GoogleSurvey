@@ -14,6 +14,7 @@ import {
   deleteForm,
   removeFormOption,
   setEtcUsage,
+  setFormOptionLabel,
   setFormQuestion,
   setNecessary,
 } from "utils/redux/slices/formSlice";
@@ -43,6 +44,9 @@ export default function FormList(props: Props) {
   };
   const removeOption = (optionIndex: number) => {
     dispatch(removeFormOption({ index, optionIndex }));
+  };
+  const dispatchFormOptionLabel = (optionIndex: number, value: string) => {
+    dispatch(setFormOptionLabel({ index, optionIndex, value }));
   };
   const useEtc = () => {
     dispatch(setEtcUsage({ index, value: true }));
@@ -89,7 +93,13 @@ export default function FormList(props: Props) {
             {currentForm.options!.map((option, optionIndex) => (
               <View key={`form_${index}_option_${optionIndex}`} style={options.item}>
                 {currentForm.type === "radio" ? <Radio /> : <Check />}
-                <TextInput value={currentForm.options![optionIndex].label} style={options.textInput} />
+                <TextInput
+                  value={currentForm.options![optionIndex].label}
+                  onChangeText={(value: string) => {
+                    dispatchFormOptionLabel(optionIndex, value);
+                  }}
+                  style={options.textInput}
+                />
                 <View style={options.iconButton}>
                   <Ionicons name="image" size={20} color={GlobalStyle.lineIcon.color} />
                 </View>
