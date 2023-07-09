@@ -9,7 +9,7 @@ import Switch from "@components/form/Switch";
 import Radio from "@components/form/Radio";
 import { useActionSheet } from "@expo/react-native-action-sheet";
 import { useAppDispatch, useAppSelector } from "hooks/useRedux";
-import { deleteForm, setFormQuestion, setNecessary } from "utils/redux/slices/formSlice";
+import { deleteForm, setEtcUsage, setFormQuestion, setNecessary } from "utils/redux/slices/formSlice";
 import FormTypeSelector from "@components/form/FormTypeSelector";
 
 interface Props {
@@ -29,6 +29,12 @@ export default function FormList(props: Props) {
   };
   const toggleNecessary = (value: boolean) => {
     dispatch(setNecessary({ index, value }));
+  };
+  const useEtc = () => {
+    dispatch(setEtcUsage({ index, value: true }));
+  };
+  const disuseEtc = () => {
+    dispatch(setEtcUsage({ index, value: false }));
   };
 
   const onPressMore = () => {
@@ -56,6 +62,55 @@ export default function FormList(props: Props) {
     );
   };
 
+  const renderForms = () => {
+    switch (currentForm.type) {
+      case "shortText":
+        return <TextInput placeholder="단답형 텍스트" containerStyle={{ width: "50%" }} disabled />;
+      case "longText":
+        return <TextInput placeholder="장문형 텍스트" containerStyle={{ width: "80%" }} disabled />;
+      case "radio":
+      case "check":
+        return (
+          <>
+            {currentForm.options!.map((option, optionIndex) => (
+              <View key={`form_${index}_option_${optionIndex}`} style={options.item}>
+                <Radio />
+                <TextInput value={currentForm.options![optionIndex].label} style={options.textInput} />
+                <View style={options.iconButton}>
+                  <Ionicons name="image" size={20} color={GlobalStyle.lineIcon.color} />
+                </View>
+                {currentForm.options!.length > 1 && (
+                  <TouchableOpacity style={options.iconButton}>
+                    <Ionicons name="close" size={24} color={GlobalStyle.lineIcon.color} />
+                  </TouchableOpacity>
+                )}
+              </View>
+            ))}
+            {currentForm.useEtc && (
+              <View style={[options.item, options.smallItem]}>
+                <Radio />
+                <View style={options.etcLabelContainer}>
+                  <Text style={options.etcLabel}>기타...</Text>
+                  <TouchableOpacity onPress={disuseEtc} style={options.iconButton}>
+                    <Ionicons name="close" size={24} color={GlobalStyle.lineIcon.color} />
+                  </TouchableOpacity>
+                </View>
+              </View>
+            )}
+            <View style={[options.item, options.smallItem]}>
+              <Radio />
+              <Text style={options.addOptionLabel}>
+                옵션 추가 또는{" "}
+                <Text onPress={useEtc} style={options.addOptionLabelPressable}>
+                  '기타' 추가
+                </Text>
+              </Text>
+            </View>
+          </>
+        );
+    }
+  };
+
   return (
     <>
       <Container style={layout.container}>
@@ -75,25 +130,7 @@ export default function FormList(props: Props) {
           <FormTypeSelector onPress={() => onPressOptionType(index)} type={currentForm.type} />
         </View>
 
-        <View style={options.container}>
-          <View style={options.item}>
-            <Radio />
-            <TextInput value="옵션 1" style={options.textInput} />
-          </View>
-          <View style={options.item}>
-            <Radio />
-            <TextInput value="옵션 2" style={options.textInput} />
-            <View style={options.imageButton}>
-              <Ionicons name="image" size={24} color={GlobalStyle.lineIcon.color} />
-            </View>
-          </View>
-          <View style={[options.item, options.addOption]}>
-            <Radio />
-            <Text style={options.addOptionLabel}>
-              옵션 추가 또는 <Text style={options.addOptionLabelPressable}>'기타' 추가</Text>
-            </Text>
-          </View>
-        </View>
+        <View style={options.container}>{renderForms()}</View>
 
         <View style={bottom.container}>
           <View style={[bottom.button, necessary.container]}>
@@ -112,10 +149,13 @@ export default function FormList(props: Props) {
 const options = StyleSheet.create({
   container: { marginTop: 16 },
   item: { flexDirection: "row", alignItems: "center", marginBottom: 12 },
+  smallItem: { paddingLeft: 6, height: 40, alignItems: "center" },
   textInput: { marginLeft: 10, height: 40, fontSize: 15, flex: 1 },
-  imageButton: { width: 54, height: 40, alignItems: "center", justifyContent: "center" },
+  iconButton: { width: 40, height: undefined, aspectRatio: 1, alignItems: "center", justifyContent: "center" },
 
-  addOption: { paddingLeft: 6, height: 40, alignItems: "center" },
+  etcLabelContainer: { flexDirection: "row", alignItems: "center", flex: 1 },
+  etcLabel: { flex: 1, color: GlobalStyle.gray.color, paddingLeft: 10 },
+
   addOptionLabel: { paddingLeft: 10 },
   addOptionLabelPressable: { color: GlobalStyle.blue.color, fontWeight: "500" },
 });

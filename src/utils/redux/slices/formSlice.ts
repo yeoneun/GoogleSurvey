@@ -11,7 +11,7 @@ export interface FormProps {
   question: string;
   type: FormTypes;
   options?: OptionProps[];
-  useEtc?: boolean;
+  useEtc: boolean;
   necessary: boolean;
 }
 
@@ -21,10 +21,12 @@ export interface FormState {
   forms: FormProps[];
 }
 
+const defaultOption = [{ label: "옵션 1" }];
+
 const defaultForm: FormProps = {
   question: "",
   type: "radio",
-  options: [{ label: "옵션 1" }],
+  options: defaultOption,
   useEtc: false,
   necessary: false,
 };
@@ -63,7 +65,19 @@ export const formSlice = createSlice({
     setFormType: (state, action: PayloadAction<{ index: number; value: FormTypes }>) => {
       console.log("setFormType", action.payload);
       const { index, value } = action.payload;
+      if (value === "shortText" || value === "longText") {
+        state.forms[index].options = undefined;
+      } else {
+        if (!state.forms[index].options) {
+          state.forms[index].options = defaultOption;
+        }
+      }
       state.forms[index].type = value;
+    },
+    setEtcUsage: (state, action: PayloadAction<{ index: number; value: boolean }>) => {
+      console.log("setEtcUsage", action.payload);
+      const { index, value } = action.payload;
+      state.forms[index].useEtc = value;
     },
     setNecessary: (state, action: PayloadAction<{ index: number; value: boolean }>) => {
       console.log("setNecessary", action.payload);
@@ -73,8 +87,16 @@ export const formSlice = createSlice({
   },
 });
 
-export const { setTitle, setDescription, addForm, deleteForm, setFormQuestion, setFormType, setNecessary } =
-  formSlice.actions;
+export const {
+  setTitle,
+  setDescription,
+  addForm,
+  deleteForm,
+  setFormQuestion,
+  setFormType,
+  setEtcUsage,
+  setNecessary,
+} = formSlice.actions;
 
 export const selectForm = (state: RootState) => state.form;
 
