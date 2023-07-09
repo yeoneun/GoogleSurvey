@@ -103,7 +103,7 @@ export default function FormList(props: Props) {
               <View style={[options.item, options.smallItem]}>
                 <Radio />
                 <View style={options.etcLabelContainer}>
-                  <Text style={options.etcLabel}>기타...</Text>
+                  <Text style={[options.smallItemLabel, options.etcLabel]}>기타...</Text>
                   <TouchableOpacity onPress={disuseEtc} style={options.iconButton}>
                     <Ionicons name="close" size={24} color={GlobalStyle.lineIcon.color} />
                   </TouchableOpacity>
@@ -112,9 +112,12 @@ export default function FormList(props: Props) {
             )}
             <View style={[options.item, options.smallItem]}>
               <Radio />
-              <Text style={options.addOptionLabel}>
-                <Text onPress={addOption}>옵션 추가</Text> 또는{" "}
-                <Text onPress={useEtc} style={options.addOptionLabelPressable}>
+              <Text style={options.smallItemLabel}>
+                <Text onPress={addOption} style={options.addOption}>
+                  옵션 추가
+                </Text>{" "}
+                또는{" "}
+                <Text onPress={useEtc} style={options.addEtc}>
                   '기타' 추가
                 </Text>
               </Text>
@@ -163,14 +166,15 @@ const options = StyleSheet.create({
   container: { marginTop: 16 },
   item: { flexDirection: "row", alignItems: "center", marginBottom: 12 },
   smallItem: { paddingLeft: 6, height: 40, alignItems: "center" },
+  smallItemLabel: { paddingLeft: 10 },
   textInput: { marginLeft: 10, height: 40, fontSize: 15, flex: 1 },
   iconButton: { width: 40, height: undefined, aspectRatio: 1, alignItems: "center", justifyContent: "center" },
 
   etcLabelContainer: { flexDirection: "row", alignItems: "center", flex: 1 },
-  etcLabel: { flex: 1, color: GlobalStyle.gray.color, paddingLeft: 10 },
+  etcLabel: { flex: 1, color: GlobalStyle.gray.color },
 
-  addOptionLabel: { paddingLeft: 10 },
-  addOptionLabelPressable: { color: GlobalStyle.blue.color, fontWeight: "500" },
+  addOption: { color: GlobalStyle.gray.color, fontWeight: "500" },
+  addEtc: { color: GlobalStyle.blue.color, fontWeight: "500" },
 });
 
 const bottom = StyleSheet.create({
