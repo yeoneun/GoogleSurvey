@@ -2,9 +2,10 @@ import React, { useEffect, useRef } from "react";
 import { StyleSheet, Keyboard, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import GlobalStyle from "@styles/GlobalStyles";
-import { useAppDispatch } from "hooks/useRedux";
+import { useAppDispatch, useAppSelector } from "hooks/useRedux";
 import { addForm } from "utils/redux/slices/formSlice";
 import { Animated } from "react-native";
+import { removeFocusedFormIndex, setFocusedFormIndex } from "utils/redux/slices/focusSlice";
 
 interface Props {
   navigateToPreview: () => void;
@@ -13,7 +14,17 @@ interface Props {
 export default function FloatingButtons(props: Props) {
   const { navigateToPreview } = props;
   const dispatch = useAppDispatch();
+  const form = useAppSelector((state) => state.form);
   const floatingButtonBottom = useRef(new Animated.Value(30)).current;
+
+  const onPressAdd = async () => {
+    await dispatch(addForm());
+    dispatch(setFocusedFormIndex(form.forms.length));
+  };
+  const onPressPreview = async () => {
+    await dispatch(removeFocusedFormIndex());
+    navigateToPreview();
+  };
 
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener("keyboardDidShow", () => {
@@ -39,10 +50,10 @@ export default function FloatingButtons(props: Props) {
 
   return (
     <Animated.View style={[layout.container, { bottom: floatingButtonBottom }]}>
-      <TouchableOpacity onPress={() => dispatch(addForm())} style={layout.button}>
+      <TouchableOpacity onPress={onPressAdd} style={layout.button}>
         <Ionicons name="add-sharp" size={32} color={"white"} />
       </TouchableOpacity>
-      <TouchableOpacity onPress={navigateToPreview} style={layout.button}>
+      <TouchableOpacity onPress={onPressPreview} style={layout.button}>
         <Ionicons name="eye" size={24} color="white" />
       </TouchableOpacity>
     </Animated.View>

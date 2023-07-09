@@ -13,7 +13,6 @@ export interface FormProps {
   options?: OptionProps[];
   useEtc: boolean;
   necessary: boolean;
-  focused?: boolean;
 }
 
 export interface FormState {
@@ -60,9 +59,7 @@ export const formSlice = createSlice({
     },
     copyForm: (state, action: PayloadAction<number>) => {
       console.log("copyForm", action.payload);
-      const newForm = state.forms[action.payload];
-      newForm.focused = false;
-      state.forms.splice(action.payload, 0, newForm);
+      state.forms.splice(action.payload, 0, state.forms[action.payload]);
     },
     setFormQuestion: (state, action: PayloadAction<{ index: number; value: string }>) => {
       console.log("setFormQuestion", action.payload);
@@ -106,22 +103,6 @@ export const formSlice = createSlice({
       const { index, value } = action.payload;
       state.forms[index].necessary = value;
     },
-    setFormFocused: (state, action: PayloadAction<{ index: number; value: boolean }>) => {
-      console.log("setFormFocused", action.payload);
-      const { index, value } = action.payload;
-      if (value) {
-        state.forms.forEach((item) => (item.focused = false));
-      }
-      state.forms[index].focused = value;
-    },
-    setAllFormUnFocused: (state) => {
-      console.log("setFormAllUnFocused");
-      const isFocusedForm = state.forms.some((item) => item.focused);
-      if (!isFocusedForm) {
-        return;
-      }
-      state.forms.forEach((item) => (item.focused = false));
-    },
   },
 });
 
@@ -138,8 +119,6 @@ export const {
   removeFormOption,
   setFormOptionLabel,
   setNecessary,
-  setFormFocused,
-  setAllFormUnFocused,
 } = formSlice.actions;
 
 export const selectForm = (state: RootState) => state.form;

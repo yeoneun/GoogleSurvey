@@ -1,9 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
 import formSlice from "./slices/formSlice";
+import focusSlice from "./slices/focusSlice";
 
 const store = configureStore({
   reducer: {
     form: formSlice,
+    focus: focusSlice,
   },
 });
 

@@ -1,5 +1,5 @@
-import React from "react";
-import { Pressable, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import React, { useEffect, useRef, useState } from "react";
+import { Pressable, StyleSheet, Text, TextInput as RNTextInput, TouchableOpacity, View } from "react-native";
 import TextInput from "@components/form/TextInput";
 import Container from "./Container";
 import { Ionicons } from "@expo/vector-icons";
@@ -15,7 +15,6 @@ import {
   deleteForm,
   removeFormOption,
   setEtcUsage,
-  setFormFocused,
   setFormOptionLabel,
   setFormQuestion,
   setNecessary,
@@ -23,6 +22,7 @@ import {
 import FormTypeSelector from "@components/form/FormTypeSelector";
 import Check from "@components/form/Check";
 import FormOptionEditor from "@components/form/FormOptionEditor";
+import { setFocusedFormIndex } from "utils/redux/slices/focusSlice";
 
 interface Props {
   index: number;
@@ -32,9 +32,21 @@ interface Props {
 export default function FormList(props: Props) {
   const { index, onPressOptionType } = props;
   const { showActionSheetWithOptions } = useActionSheet();
+  const questionRef = useRef<RNTextInput>(null);
   const form = useAppSelector((state) => state.form);
+  const { focusedFormIndex } = useAppSelector((state) => state.focus);
   const currentForm = form.forms[index];
   const dispatch = useAppDispatch();
+
+  const [focused, setFocused] = useState(false);
+
+  useEffect(() => {
+    if (focusedFormIndex === index) {
+      setFocused(true);
+      return;
+    }
+    setFocused(false);
+  }, [focusedFormIndex]);
 
   const dispatchQuestion = (value: string) => {
     dispatch(setFormQuestion({ index, value }));
@@ -58,10 +70,7 @@ export default function FormList(props: Props) {
     dispatch(setEtcUsage({ index, value: false }));
   };
   const focusForm = () => {
-    dispatch(setFormFocused({ index, value: true }));
-  };
-  const unfocusForm = () => {
-    dispatch(setFormFocused({ index, value: false }));
+    dispatch(setFocusedFormIndex(index));
   };
 
   const onPressMore = () => {
@@ -79,6 +88,7 @@ export default function FormList(props: Props) {
         switch (selectedIndex) {
           case 0:
             dispatch(copyForm(index));
+            dispatch(setFocusedFormIndex(index + 1));
             break;
 
           case destructiveButtonIndex:
@@ -109,7 +119,7 @@ export default function FormList(props: Props) {
                   }}
                   onFocusInput={focusForm}
                 />
-                {currentForm.focused && currentForm.options!.length > 1 && (
+                {focused && currentForm.options!.length > 1 && (
                   <TouchableOpacity onPress={() => removeOption(optionIndex)} style={options.iconButton}>
                     <Ionicons name="close" size={24} color={GlobalStyle.lineIcon.color} />
                   </TouchableOpacity>
@@ -121,7 +131,7 @@ export default function FormList(props: Props) {
                 {currentForm.type === "radio" ? <Radio /> : <Check />}
                 <View style={options.etcLabelContainer}>
                   <Text style={[options.smallItemLabel, options.etcLabel]}>기타...</Text>
-                  {currentForm.focused && (
+                  {focused && (
                     <TouchableOpacity onPress={disuseEtc} style={options.iconButton}>
                       <Ionicons name="close" size={24} color={GlobalStyle.lineIcon.color} />
                     </TouchableOpacity>
@@ -129,7 +139,7 @@ export default function FormList(props: Props) {
                 </View>
               </View>
             )}
-            {currentForm.focused && (
+            {focused && (
               <View style={[options.item, options.smallItem]}>
                 {currentForm.type === "radio" ? <Radio /> : <Check />}
                 <Text style={options.smallItemLabel}>
@@ -149,7 +159,7 @@ export default function FormList(props: Props) {
   };
 
   return (
-    <Container focused={currentForm.focused} style={[layout.container, currentForm.focused && layout.focusedContainer]}>
+    <Container focused={focused} style={[layout.container, focused && layout.focusedContainer]}>
       <TextInput
         value={currentForm.question}
         onChangeText={dispatchQuestion}
@@ -160,7 +170,7 @@ export default function FormList(props: Props) {
         onFocus={focusForm}
       />
 
-      {currentForm.focused && (
+      {focused && (
         <View style={layout.toolArea}>
           <TouchableOpacity style={layout.imageButton}>
             <Ionicons name="image" size={24} color={GlobalStyle.lineIcon.color} />
@@ -171,7 +181,7 @@ export default function FormList(props: Props) {
 
       <View style={options.container}>{renderForms()}</View>
 
-      {currentForm.focused && (
+      {focused && (
         <View style={bottom.container}>
           <View style={[bottom.button, necessary.container]}>
             <Text style={necessary.text}>필수</Text>

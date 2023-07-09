@@ -19,6 +19,7 @@ export default function Create(props: Props) {
   const { navigation } = props;
   const formTypeSheet = useRef<RNBottomSheet>(null);
   const form = useAppSelector((state) => state.form);
+  const { focusedFormIndex } = useAppSelector((state) => state.focus);
   const dispatch = useAppDispatch();
 
   const openFormTypeSheet = () => {
@@ -26,11 +27,10 @@ export default function Create(props: Props) {
     formTypeSheet.current?.expand();
   };
   const dispatchFormType = (type: FormTypes) => {
-    const formIndex = form.forms.findIndex((item) => item.focused);
-    if (formIndex < 0) {
+    if (!focusedFormIndex) {
       return;
     }
-    dispatch(setFormType({ index: formIndex, value: type }));
+    dispatch(setFormType({ index: focusedFormIndex, value: type }));
     formTypeSheet.current?.close();
   };
   const goPreview = () => {
