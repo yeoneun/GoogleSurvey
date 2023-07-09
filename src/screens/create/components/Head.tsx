@@ -87,6 +87,7 @@ export default function Head() {
           onFocus={onTitleFocus}
           onBlur={onTitleBlur}
           multiline
+          scrollEnabled={false}
         />
         <Animated.View style={[layout.textDecorationArea, { height: titleAreaDecorationHeight }]}>
           <TextDecoration />
@@ -101,6 +102,7 @@ export default function Head() {
           onBlur={onDescriptonBlur}
           style={layout.descriptionInput}
           multiline
+          scrollEnabled={false}
         />
         <Animated.View style={[layout.textDecorationArea, { height: descriptionAreaDecorationHeight }]}>
           <TextDecoration />

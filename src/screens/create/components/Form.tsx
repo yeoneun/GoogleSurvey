@@ -145,7 +145,7 @@ export default function FormList(props: Props) {
           placeholder="질문"
           style={layout.textInput}
           multiline
-          textAlignVertical="center"
+          scrollEnabled={false}
         />
 
         <View style={layout.toolArea}>

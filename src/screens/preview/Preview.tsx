@@ -35,7 +35,7 @@ export default function Preview(props: Props) {
       case "shortText":
         return <TextInput placeholder="내 답변" />;
       case "longText":
-        return <TextInput placeholder="내 답변" multiline />;
+        return <TextInput placeholder="내 답변" multiline scrollEnabled={false} />;
       case "radio":
         return (
           <>
