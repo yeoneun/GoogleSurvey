@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useState } from "react";
-import { StyleSheet, Animated, ViewStyle } from "react-native";
+import React, { useRef } from "react";
+import { StyleSheet, Animated } from "react-native";
 import GlobalStyle from "styles/GlobalStyles";
 import TextDecoration from "@components/form/TextDecoration";
 import Container from "./Container";
@@ -13,8 +13,6 @@ export default function Head() {
 
   const dispatchTitle = (value: string) => dispatch(setTitle(value));
   const dispatchDescription = (value: string) => dispatch(setDescription(value));
-
-  const [descriptionFocus, setDescriptionFocus] = useState(false);
 
   const titleAreaMarginTop = useRef(new Animated.Value(0)).current;
   const titleAreaDecorationHeight = useRef(new Animated.Value(0)).current;
