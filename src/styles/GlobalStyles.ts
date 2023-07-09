@@ -22,6 +22,9 @@ const GlobalStyle = StyleSheet.create({
   blue: {
     color: "#1973E7",
   },
+  red: {
+    color: "#D93026",
+  },
 });
 
 export default GlobalStyle;

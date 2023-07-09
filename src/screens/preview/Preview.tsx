@@ -84,11 +84,19 @@ export default function Preview(props: Props) {
             <Container style={title.container}>
               <Text style={title.title}>{form.title}</Text>
               {form.description && <Text style={title.description}>{form.description}</Text>}
+
+              {form.forms.some((item) => item.necessary) && (
+                <View style={title.necessaryArea}>
+                  <Text style={title.necessary}>* 표시는 필수 항목임</Text>
+                </View>
+              )}
             </Container>
 
             {form.forms.map((item, index) => (
               <Container key={`preview_form_${index}`} style={content.container}>
-                {item.question && <Text style={content.question}>{item.question}</Text>}
+                <Text style={content.question}>
+                  {item.question} {item.necessary && <Text style={content.necessary}>*</Text>}
+                </Text>
                 {renderForm(index)}
               </Container>
             ))}
@@ -102,12 +110,15 @@ export default function Preview(props: Props) {
 const content = StyleSheet.create({
   container: { marginTop: 12 },
   question: { fontSize: 15, marginBottom: 20 },
+  necessary: { color: GlobalStyle.red.color },
 });
 
 const title = StyleSheet.create({
   container: { borderTopColor: GlobalStyle.point.color, borderTopWidth: 8 },
   title: { fontSize: 28 },
   description: { fontSize: 15, marginTop: 23 },
+  necessaryArea: { borderTopWidth: 1, borderColor: GlobalStyle.gray.borderColor, marginTop: 15, paddingTop: 15 },
+  necessary: { color: GlobalStyle.red.color },
 });
 
 const header = StyleSheet.create({
