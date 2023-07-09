@@ -74,38 +74,36 @@ export default function Preview(props: Props) {
       keyboardShouldPersistTaps="handled"
       contentInsetAdjustmentBehavior="automatic"
     >
-      <ScrollView contentInsetAdjustmentBehavior="automatic" keyboardShouldPersistTaps="handled">
-        <SafeAreaView>
-          <View style={header.container}>
-            <Pressable onPress={goBack} style={header.backButton}>
-              <Ionicons name="arrow-back" size={24} />
-            </Pressable>
-            <Text style={header.title}>미리보기</Text>
-          </View>
+      <SafeAreaView>
+        <View style={header.container}>
+          <Pressable onPress={goBack} style={header.backButton}>
+            <Ionicons name="arrow-back" size={24} />
+          </Pressable>
+          <Text style={header.title}>미리보기</Text>
+        </View>
 
-          <Wrapper>
-            <Container style={title.container}>
-              <Text style={title.title}>{form.title}</Text>
-              {form.description && <Text style={title.description}>{form.description}</Text>}
+        <Wrapper>
+          <Container style={title.container}>
+            <Text style={title.title}>{form.title}</Text>
+            {form.description && <Text style={title.description}>{form.description}</Text>}
 
-              {form.forms.some((item) => item.necessary) && (
-                <View style={title.necessaryArea}>
-                  <Text style={title.necessary}>* 표시는 필수 항목임</Text>
-                </View>
-              )}
+            {form.forms.some((item) => item.necessary) && (
+              <View style={title.necessaryArea}>
+                <Text style={title.necessary}>* 표시는 필수 항목임</Text>
+              </View>
+            )}
+          </Container>
+
+          {form.forms.map((item, index) => (
+            <Container key={`preview_form_${index}`} style={content.container}>
+              <Text style={content.question}>
+                {item.question} {item.necessary && <Text style={content.necessary}>*</Text>}
+              </Text>
+              {renderForm(index)}
             </Container>
-
-            {form.forms.map((item, index) => (
-              <Container key={`preview_form_${index}`} style={content.container}>
-                <Text style={content.question}>
-                  {item.question} {item.necessary && <Text style={content.necessary}>*</Text>}
-                </Text>
-                {renderForm(index)}
-              </Container>
-            ))}
-          </Wrapper>
-        </SafeAreaView>
-      </ScrollView>
+          ))}
+        </Wrapper>
+      </SafeAreaView>
     </KeyboardAwareScrollView>
   );
 }
