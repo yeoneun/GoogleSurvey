@@ -20,7 +20,7 @@ const GlobalStyle = StyleSheet.create({
     color: "#888",
   },
   blue: {
-    color: "#1973E7",
+    color: "#4286F5",
   },
   red: {
     color: "#D93026",

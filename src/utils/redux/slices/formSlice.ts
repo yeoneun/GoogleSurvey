@@ -13,6 +13,7 @@ export interface FormProps {
   options?: OptionProps[];
   useEtc: boolean;
   necessary: boolean;
+  focused?: boolean;
 }
 
 export interface FormState {
@@ -103,6 +104,18 @@ export const formSlice = createSlice({
       const { index, value } = action.payload;
       state.forms[index].necessary = value;
     },
+    setFormFocused: (state, action: PayloadAction<{ index: number; value: boolean }>) => {
+      console.log("setFormFocused", action.payload);
+      const { index, value } = action.payload;
+      if (value) {
+        state.forms.forEach((item) => (item.focused = false));
+      }
+      state.forms[index].focused = value;
+    },
+    setAllFormUnFocused: (state) => {
+      console.log("setFormAllUnFocused");
+      state.forms.forEach((item) => (item.focused = false));
+    },
   },
 });
 
@@ -119,6 +132,8 @@ export const {
   removeFormOption,
   setFormOptionLabel,
   setNecessary,
+  setFormFocused,
+  setAllFormUnFocused,
 } = formSlice.actions;
 
 export const selectForm = (state: RootState) => state.form;

@@ -7,14 +7,16 @@ import GlobalStyle from "@styles/GlobalStyles";
 interface Props {
   value: string;
   setValue: (value: string) => void;
+  onFocusInput: () => void;
 }
 
 export default function FormOptionEditor(props: Props) {
-  const { value, setValue } = props;
+  const { value, setValue, onFocusInput } = props;
 
   const imageButtonWidth = useRef(new Animated.Value(0)).current;
 
   const onFocus = () => {
+    onFocusInput();
     Animated.timing(imageButtonWidth, {
       toValue: 40,
       duration: 300,

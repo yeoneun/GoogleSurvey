@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { StyleSheet, Animated } from "react-native";
 import GlobalStyle from "styles/GlobalStyles";
 import TextDecoration from "@components/form/TextDecoration";
@@ -10,6 +10,7 @@ import TextInput from "@components/form/TextInput";
 export default function Head() {
   const form = useAppSelector((state) => state.form);
   const dispatch = useAppDispatch();
+  const [focused, setFocused] = useState(false);
 
   const dispatchTitle = (value: string) => dispatch(setTitle(value));
   const dispatchDescription = (value: string) => dispatch(setDescription(value));
@@ -20,6 +21,7 @@ export default function Head() {
   const descriptionAreaDecorationHeight = useRef(new Animated.Value(0)).current;
 
   const onTitleFocus = () => {
+    setFocused(true);
     Animated.parallel([
       Animated.timing(titleAreaMarginTop, {
         toValue: 24,
@@ -34,6 +36,7 @@ export default function Head() {
     ]).start();
   };
   const onTitleBlur = () => {
+    setFocused(false);
     Animated.parallel([
       Animated.timing(titleAreaMarginTop, {
         toValue: 0,
@@ -48,6 +51,7 @@ export default function Head() {
     ]).start();
   };
   const onDescriptonFocus = () => {
+    setFocused(true);
     Animated.parallel([
       Animated.timing(descriptionAreaMarginTop, {
         toValue: 24,
@@ -62,6 +66,7 @@ export default function Head() {
     ]).start();
   };
   const onDescriptonBlur = () => {
+    setFocused(false);
     Animated.parallel([
       Animated.timing(descriptionAreaMarginTop, {
         toValue: 10,
@@ -77,7 +82,7 @@ export default function Head() {
   };
 
   return (
-    <Container style={layout.container}>
+    <Container focused={focused} style={layout.container}>
       <Animated.View style={{ marginTop: titleAreaMarginTop }}>
         <TextInput
           value={form.title}

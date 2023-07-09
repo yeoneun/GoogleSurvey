@@ -1,15 +1,17 @@
 import React, { ReactNode } from "react";
-import { StyleSheet, View, ViewStyle } from "react-native";
+import { StyleSheet, View } from "react-native";
 import GlobalStyle from "@styles/GlobalStyles";
+import { StyleProps } from "react-native-reanimated";
 
 interface Props {
   children: ReactNode;
-  style?: ViewStyle;
+  focused?: boolean;
+  style?: StyleProps;
 }
 
 export default function Container(props: Props) {
-  const { children, style } = props;
-  return <View style={[layout.container, style]}>{children}</View>;
+  const { children, focused, style } = props;
+  return <View style={[layout.container, focused && layout.focusedContainer, style]}>{children}</View>;
 }
 
 const layout = StyleSheet.create({
@@ -19,5 +21,9 @@ const layout = StyleSheet.create({
     borderRadius: 8,
     borderWidth: 1,
     borderColor: GlobalStyle.gray.borderColor,
+  },
+  focusedContainer: {
+    borderLeftWidth: 8,
+    borderLeftColor: GlobalStyle.blue.color,
   },
 });

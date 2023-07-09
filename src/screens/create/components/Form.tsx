@@ -1,5 +1,5 @@
-import React from "react";
-import { Pressable, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import React, { useState } from "react";
+import { Pressable, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native";
 import TextInput from "@components/form/TextInput";
 import Container from "./Container";
 import { Ionicons } from "@expo/vector-icons";
@@ -15,6 +15,7 @@ import {
   deleteForm,
   removeFormOption,
   setEtcUsage,
+  setFormFocused,
   setFormOptionLabel,
   setFormQuestion,
   setNecessary,
@@ -55,6 +56,12 @@ export default function FormList(props: Props) {
   };
   const disuseEtc = () => {
     dispatch(setEtcUsage({ index, value: false }));
+  };
+  const focusForm = () => {
+    dispatch(setFormFocused({ index, value: true }));
+  };
+  const unfocusForm = () => {
+    dispatch(setFormFocused({ index, value: false }));
   };
 
   const onPressMore = () => {
@@ -100,8 +107,9 @@ export default function FormList(props: Props) {
                   setValue={(value: string) => {
                     dispatchFormOptionLabel(optionIndex, value);
                   }}
+                  onFocusInput={focusForm}
                 />
-                {currentForm.options!.length > 1 && (
+                {currentForm.focused && currentForm.options!.length > 1 && (
                   <TouchableOpacity onPress={() => removeOption(optionIndex)} style={options.iconButton}>
                     <Ionicons name="close" size={24} color={GlobalStyle.lineIcon.color} />
                   </TouchableOpacity>
@@ -113,50 +121,57 @@ export default function FormList(props: Props) {
                 {currentForm.type === "radio" ? <Radio /> : <Check />}
                 <View style={options.etcLabelContainer}>
                   <Text style={[options.smallItemLabel, options.etcLabel]}>기타...</Text>
-                  <TouchableOpacity onPress={disuseEtc} style={options.iconButton}>
-                    <Ionicons name="close" size={24} color={GlobalStyle.lineIcon.color} />
-                  </TouchableOpacity>
+                  {currentForm.focused && (
+                    <TouchableOpacity onPress={disuseEtc} style={options.iconButton}>
+                      <Ionicons name="close" size={24} color={GlobalStyle.lineIcon.color} />
+                    </TouchableOpacity>
+                  )}
                 </View>
               </View>
             )}
-            <View style={[options.item, options.smallItem]}>
-              {currentForm.type === "radio" ? <Radio /> : <Check />}
-              <Text style={options.smallItemLabel}>
-                <Text onPress={addOption} style={options.addOption}>
-                  옵션 추가
-                </Text>{" "}
-                또는{" "}
-                <Text onPress={useEtc} style={options.addEtc}>
-                  '기타' 추가
+            {currentForm.focused && (
+              <View style={[options.item, options.smallItem]}>
+                {currentForm.type === "radio" ? <Radio /> : <Check />}
+                <Text style={options.smallItemLabel}>
+                  <Text onPress={addOption} style={options.addOption}>
+                    옵션 추가
+                  </Text>{" "}
+                  또는{" "}
+                  <Text onPress={useEtc} style={options.addEtc}>
+                    '기타' 추가
+                  </Text>
                 </Text>
-              </Text>
-            </View>
+              </View>
+            )}
           </>
         );
     }
   };
 
   return (
-    <>
-      <Container style={layout.container}>
-        <TextInput
-          value={currentForm.question}
-          onChangeText={dispatchQuestion}
-          placeholder="질문"
-          style={layout.textInput}
-          multiline
-          scrollEnabled={false}
-        />
+    <Container focused={currentForm.focused} style={[layout.container, currentForm.focused && layout.focusedContainer]}>
+      <TextInput
+        value={currentForm.question}
+        onChangeText={dispatchQuestion}
+        placeholder="질문"
+        style={layout.question}
+        multiline
+        scrollEnabled={false}
+        onFocus={focusForm}
+      />
 
+      {currentForm.focused && (
         <View style={layout.toolArea}>
           <TouchableOpacity style={layout.imageButton}>
             <Ionicons name="image" size={24} color={GlobalStyle.lineIcon.color} />
           </TouchableOpacity>
           <FormTypeSelector onPress={() => onPressOptionType(index)} type={currentForm.type} />
         </View>
+      )}
 
-        <View style={options.container}>{renderForms()}</View>
+      <View style={options.container}>{renderForms()}</View>
 
+      {currentForm.focused && (
         <View style={bottom.container}>
           <View style={[bottom.button, necessary.container]}>
             <Text style={necessary.text}>필수</Text>
@@ -166,8 +181,8 @@ export default function FormList(props: Props) {
             <MaterialCommunityIcons name="dots-vertical" size={24} color={GlobalStyle.lineIcon.color} />
           </Pressable>
         </View>
-      </Container>
-    </>
+      )}
+    </Container>
   );
 }
 
@@ -207,8 +222,13 @@ const necessary = StyleSheet.create({
 });
 
 const layout = StyleSheet.create({
-  container: { marginTop: 12, paddingBottom: 0 },
-  textInput: {
+  container: { marginTop: 12 },
+  focusedContainer: { paddingBottom: 0 },
+  question: {
+    fontSize: 16,
+    lineHeight: 16 * 1.4,
+  },
+  focusedQuestion: {
     fontSize: 16,
     backgroundColor: GlobalStyle.gray.backgroundColor,
     paddingHorizontal: 12,
