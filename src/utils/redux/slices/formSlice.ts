@@ -57,6 +57,10 @@ export const formSlice = createSlice({
       console.log("deleteForm", action.payload);
       state.forms.splice(action.payload, 1);
     },
+    copyForm: (state, action: PayloadAction<number>) => {
+      console.log("copyForm", action.payload);
+      state.forms.splice(action.payload, 0, state.forms[action.payload]);
+    },
     setFormQuestion: (state, action: PayloadAction<{ index: number; value: string }>) => {
       console.log("setFormQuestion", action.payload);
       const { index, value } = action.payload;
@@ -107,6 +111,7 @@ export const {
   setDescription,
   addForm,
   deleteForm,
+  copyForm,
   setFormQuestion,
   setFormType,
   setEtcUsage,

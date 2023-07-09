@@ -11,6 +11,7 @@ import { useActionSheet } from "@expo/react-native-action-sheet";
 import { useAppDispatch, useAppSelector } from "hooks/useRedux";
 import {
   addFormOption,
+  copyForm,
   deleteForm,
   removeFormOption,
   setEtcUsage,
@@ -70,7 +71,7 @@ export default function FormList(props: Props) {
       (selectedIndex?: number) => {
         switch (selectedIndex) {
           case 0:
-            // 항목 복제
+            dispatch(copyForm(index));
             break;
 
           case destructiveButtonIndex:
