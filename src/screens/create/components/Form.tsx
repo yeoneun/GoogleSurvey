@@ -94,7 +94,7 @@ export default function FormList(props: Props) {
           <>
             {currentForm.options!.map((option, optionIndex) => (
               <View key={`form_${index}_option_${optionIndex}`} style={options.item}>
-                {currentForm.type === "radio" ? <Radio /> : <Check />}
+                {currentForm.type === "radio" ? <Radio disabled /> : <Check />}
                 <FormOptionEditor
                   value={option.label}
                   setValue={(value: string) => {

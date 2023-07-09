@@ -18,6 +18,7 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { ScreenParams } from "../../../App";
 import TextInput from "@components/form/TextInput";
 import Radio from "@components/form/Radio";
+import Check from "@components/form/Check";
 
 type Props = NativeStackScreenProps<ScreenParams, "Preview">;
 
@@ -43,13 +44,24 @@ export default function Preview(props: Props) {
                 key={`preview_form_${formIndex}_option_${index}`}
                 style={{ flexDirection: "row", alignItems: "center" }}
               >
-                <Radio label={option.label} containerStyle={{ marginTop: index === 0 ? 0 : 20 }} />
+                <Radio label={option.label} />
               </View>
             ))}
           </>
         );
       case "check":
-        return <></>;
+        return (
+          <>
+            {currentForm.options?.map((option, index) => (
+              <View
+                key={`preview_form_${formIndex}_option_${index}`}
+                style={{ flexDirection: "row", alignItems: "center" }}
+              >
+                <Check label={option.label} />
+              </View>
+            ))}
+          </>
+        );
     }
   };
 
@@ -89,7 +101,7 @@ export default function Preview(props: Props) {
 
 const content = StyleSheet.create({
   container: { marginTop: 12 },
-  question: { fontSize: 15, marginBottom: 30 },
+  question: { fontSize: 15, marginBottom: 20 },
 });
 
 const title = StyleSheet.create({

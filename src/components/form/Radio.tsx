@@ -1,22 +1,23 @@
 import GlobalStyle from "@styles/GlobalStyles";
-import React, { useState } from "react";
-import { View, StyleSheet, Text, ViewStyle, Pressable } from "react-native";
+import React from "react";
+import { View, StyleSheet, Text, Pressable } from "react-native";
 
 interface Props {
+  checked?: boolean;
+  setChecked?: (checked: boolean) => void;
   label?: string;
-  containerStyle?: ViewStyle;
+  disabled?: boolean;
 }
 
 export default function Radio(props: Props) {
-  const { label, containerStyle } = props;
-  const [checked, setCheckd] = useState(false);
+  const { checked, setChecked, label, disabled } = props;
 
   if (!label) {
     return <View style={layout.button} />;
   }
 
   return (
-    <Pressable onPress={() => setCheckd((prev) => !prev)} style={[layout.container, containerStyle]}>
+    <Pressable onPress={() => setChecked && setChecked(!checked)} disabled={disabled} style={layout.container}>
       <View style={[layout.button, checked && layout.buttonOn]}>{checked && <View style={layout.on} />}</View>
       <Text style={layout.label}>{label}</Text>
     </Pressable>
@@ -27,6 +28,7 @@ const layout = StyleSheet.create({
   container: {
     flexDirection: "row",
     alignItems: "center",
+    paddingVertical: 10,
   },
   button: {
     width: 20,
