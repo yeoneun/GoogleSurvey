@@ -1,12 +1,12 @@
 import GlobalStyle from "@styles/GlobalStyles";
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { formTypes } from "utils/redux/slices/formSlice";
+import { FormTypes } from "utils/redux/slices/formSlice";
 import { MaterialIcons } from "@expo/vector-icons";
 
 interface Props {
   onPress: () => void;
-  type: formTypes;
+  type: FormTypes;
 }
 
 export default function FormTypeSelector(props: Props) {

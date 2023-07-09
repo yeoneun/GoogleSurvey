@@ -1,16 +1,16 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import type { RootState } from "../store";
 
-export type formTypes = "shortText" | "longText" | "radio" | "check";
+export type FormTypes = "shortText" | "longText" | "radio" | "check";
 
-interface optionProps {
+interface OptionProps {
   label: string;
 }
 
-export interface formProps {
+export interface FormProps {
   question: string;
-  type: formTypes;
-  options?: optionProps[];
+  type: FormTypes;
+  options?: OptionProps[];
   useEtc?: boolean;
   necessary: boolean;
 }
@@ -18,10 +18,10 @@ export interface formProps {
 export interface FormState {
   title: string;
   description: string;
-  forms: formProps[];
+  forms: FormProps[];
 }
 
-const defaultForm: formProps = {
+const defaultForm: FormProps = {
   question: "",
   type: "radio",
   options: [{ label: "옵션 1" }],
@@ -60,6 +60,11 @@ export const formSlice = createSlice({
       const { index, value } = action.payload;
       state.forms[index].question = value;
     },
+    setFormType: (state, action: PayloadAction<{ index: number; value: FormTypes }>) => {
+      console.log("setFormType", action.payload);
+      const { index, value } = action.payload;
+      state.forms[index].type = value;
+    },
     setNecessary: (state, action: PayloadAction<{ index: number; value: boolean }>) => {
       console.log("setNecessary", action.payload);
       const { index, value } = action.payload;
@@ -68,7 +73,8 @@ export const formSlice = createSlice({
   },
 });
 
-export const { setTitle, setDescription, addForm, deleteForm, setFormQuestion, setNecessary } = formSlice.actions;
+export const { setTitle, setDescription, addForm, deleteForm, setFormQuestion, setFormType, setNecessary } =
+  formSlice.actions;
 
 export const selectForm = (state: RootState) => state.form;
 

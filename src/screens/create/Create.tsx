@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { Pressable, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity } from "react-native";
 import Wrapper from "@components/layout/Wrapper";
 import Head from "./components/Head";
@@ -8,16 +8,24 @@ import Form from "./components/Form";
 import BottomSheet from "@components/actionSheet/BottomSheet";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useAppDispatch, useAppSelector } from "hooks/useRedux";
-import { addForm } from "utils/redux/slices/formSlice";
+import { FormTypes, addForm, setFormType } from "utils/redux/slices/formSlice";
 import RNBottomSheet from "@gorhom/bottom-sheet/lib/typescript/components/bottomSheet/BottomSheet";
 
 export default function HomeScreen() {
-  const bottomSheetRef = useRef<RNBottomSheet>(null);
+  const formTypeSheet = useRef<RNBottomSheet>(null);
   const form = useAppSelector((state) => state.form);
   const dispatch = useAppDispatch();
 
-  const openFormTypeSheet = () => {
-    bottomSheetRef.current?.expand();
+  const [currentFormIndex, setCurrentFormIndex] = useState(0);
+
+  const openFormTypeSheet = (formIndex: number) => {
+    setCurrentFormIndex(formIndex);
+    formTypeSheet.current?.expand();
+  };
+
+  const dispatchFormType = (type: FormTypes) => {
+    dispatch(setFormType({ index: currentFormIndex, value: type }));
+    formTypeSheet.current?.close();
   };
 
   return (
@@ -37,20 +45,20 @@ export default function HomeScreen() {
         <Ionicons name="add-sharp" size={32} color={"white"} />
       </Pressable>
 
-      <BottomSheet ref={bottomSheetRef} title="설문 유형">
-        <TouchableOpacity style={optionType.item}>
+      <BottomSheet ref={formTypeSheet} title="설문 유형">
+        <TouchableOpacity onPress={() => dispatchFormType("shortText")} style={optionType.item}>
           <MaterialIcons name="short-text" size={24} />
           <Text style={optionType.label}>단답형</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={optionType.item}>
+        <TouchableOpacity onPress={() => dispatchFormType("longText")} style={optionType.item}>
           <MaterialIcons name="notes" size={24} />
           <Text style={optionType.label}>장문형</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={optionType.item}>
+        <TouchableOpacity onPress={() => dispatchFormType("radio")} style={optionType.item}>
           <MaterialIcons name="radio-button-checked" size={24} />
           <Text style={optionType.label}>객관식 질문</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={optionType.item}>
+        <TouchableOpacity onPress={() => dispatchFormType("check")} style={optionType.item}>
           <MaterialIcons name="check-box" size={24} />
           <Text style={optionType.label}>체크박스</Text>
         </TouchableOpacity>
