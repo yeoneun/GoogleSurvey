@@ -1,14 +1,5 @@
 import React from "react";
-import {
-  SafeAreaView,
-  ScrollView,
-  Text,
-  View,
-  StyleSheet,
-  Pressable,
-  Platform,
-  KeyboardAvoidingView,
-} from "react-native";
+import { SafeAreaView, Text, View, StyleSheet, Pressable } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import Wrapper from "@components/layout/Wrapper";
 import Container from "@screens/create/components/Container";
