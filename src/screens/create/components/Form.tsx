@@ -10,6 +10,7 @@ import Radio from "@components/form/Radio";
 import { useActionSheet } from "@expo/react-native-action-sheet";
 import { useAppDispatch, useAppSelector } from "hooks/useRedux";
 import { deleteForm, setFormQuestion, setNecessary } from "utils/redux/slices/formSlice";
+import FormTypeSelector from "@components/form/FormTypeSelector";
 
 interface Props {
   index: number;
@@ -71,9 +72,7 @@ export default function FormList(props: Props) {
           <TouchableOpacity style={layout.imageButton}>
             <Ionicons name="image" size={24} color={GlobalStyle.lineIcon.color} />
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => onPressOptionType(index)} style={layout.typeButton}>
-            <Text>객관식 질문</Text>
-          </TouchableOpacity>
+          <FormTypeSelector onPress={() => onPressOptionType(index)} type={currentForm.type} />
         </View>
 
         <View style={options.container}>
@@ -160,15 +159,6 @@ const layout = StyleSheet.create({
     height: 45,
     marginRight: 10,
     alignItems: "center",
-    justifyContent: "center",
-  },
-  typeButton: {
-    height: 45,
-    paddingHorizontal: 10,
-    borderWidth: 1,
-    flex: 1,
-    borderRadius: 5,
-    borderColor: GlobalStyle.gray.borderColor,
     justifyContent: "center",
   },
 });

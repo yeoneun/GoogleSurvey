@@ -1,13 +1,15 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import type { RootState } from "../store";
 
+export type formTypes = "shortText" | "longText" | "radio" | "check";
+
 interface optionProps {
-  label?: string;
+  label: string;
 }
 
 export interface formProps {
   question: string;
-  type: "shortText" | "longText" | "radio" | "check";
+  type: formTypes;
   options?: optionProps[];
   useEtc?: boolean;
   necessary: boolean;
