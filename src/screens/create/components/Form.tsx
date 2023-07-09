@@ -96,7 +96,7 @@ export default function FormList(props: Props) {
               <View key={`form_${index}_option_${optionIndex}`} style={options.item}>
                 {currentForm.type === "radio" ? <Radio /> : <Check />}
                 <FormOptionEditor
-                  value={currentForm.options![optionIndex].label}
+                  value={option.label}
                   setValue={(value: string) => {
                     dispatchFormOptionLabel(optionIndex, value);
                   }}
