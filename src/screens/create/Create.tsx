@@ -1,53 +1,24 @@
-import React, { useRef, useCallback, useMemo, useEffect } from "react";
-import {
-  Dimensions,
-  Pressable,
-  SafeAreaView,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import React, { useRef } from "react";
+import { Pressable, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity } from "react-native";
 import Wrapper from "@components/layout/Wrapper";
 import Head from "./components/Head";
 import { Ionicons } from "@expo/vector-icons";
 import GlobalStyle from "@styles/GlobalStyles";
 import Form from "./components/Form";
-import BottomSheet, {
-  BottomSheetBackdrop,
-  BottomSheetBackdropProps,
-  useBottomSheetDynamicSnapPoints,
-  BottomSheetView,
-} from "@gorhom/bottom-sheet";
+import BottomSheet from "@components/actionSheet/BottomSheet";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useAppDispatch, useAppSelector } from "hooks/useRedux";
 import { addForm } from "utils/redux/slices/formSlice";
+import RNBottomSheet from "@gorhom/bottom-sheet/lib/typescript/components/bottomSheet/BottomSheet";
 
 export default function HomeScreen() {
-  const bottomSheetRef = useRef<BottomSheet>(null);
+  const bottomSheetRef = useRef<RNBottomSheet>(null);
   const form = useAppSelector((state) => state.form);
   const dispatch = useAppDispatch();
-  const { height } = Dimensions.get("window");
 
-  const initialSnapPoints = useMemo(() => ["CONTENT_HEIGHT"], []);
-
-  const { animatedHandleHeight, animatedSnapPoints, animatedContentHeight, handleContentLayout } =
-    useBottomSheetDynamicSnapPoints(initialSnapPoints);
-
-  const renderBackdrop = useCallback(
-    (props: BottomSheetBackdropProps) => (
-      <BottomSheetBackdrop
-        {...props}
-        pressBehavior="close"
-        appearsOnIndex={0}
-        disappearsOnIndex={-1}
-        style={{ backgroundColor: "#C0C4CF99", flex: 1, position: "absolute", left: 0, right: 0, top: 0, bottom: 0 }}
-        opacity={1}
-      />
-    ),
-    []
-  );
+  const openFormTypeSheet = () => {
+    bottomSheetRef.current?.expand();
+  };
 
   return (
     <>
@@ -56,7 +27,7 @@ export default function HomeScreen() {
           <Wrapper>
             <Head />
             {form.forms.map((item, index) => (
-              <Form key={`form_${index}`} index={index} onPressOptionType={() => bottomSheetRef.current?.expand()} />
+              <Form key={`form_${index}`} index={index} onPressOptionType={openFormTypeSheet} />
             ))}
           </Wrapper>
         </SafeAreaView>
@@ -66,37 +37,23 @@ export default function HomeScreen() {
         <Ionicons name="add-sharp" size={32} color={"white"} />
       </Pressable>
 
-      <BottomSheet
-        ref={bottomSheetRef}
-        index={-1}
-        handleStyle={{ display: "none" }}
-        snapPoints={animatedSnapPoints}
-        handleHeight={animatedHandleHeight}
-        contentHeight={animatedContentHeight}
-        enablePanDownToClose
-        backdropComponent={renderBackdrop}
-      >
-        <BottomSheetView onLayout={handleContentLayout} style={{ maxHeight: height * 0.9 }}>
-          <View style={bottomSheet.container}>
-            <Text style={bottomSheet.title}>옵션 유형</Text>
-            <TouchableOpacity style={optionType.item}>
-              <MaterialIcons name="short-text" size={24} />
-              <Text style={optionType.label}>단답형</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={optionType.item}>
-              <MaterialIcons name="notes" size={24} />
-              <Text style={optionType.label}>장문형</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={optionType.item}>
-              <MaterialIcons name="radio-button-checked" size={24} />
-              <Text style={optionType.label}>객관식 질문</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={optionType.item}>
-              <MaterialIcons name="check-box" size={24} />
-              <Text style={optionType.label}>체크박스</Text>
-            </TouchableOpacity>
-          </View>
-        </BottomSheetView>
+      <BottomSheet ref={bottomSheetRef} title="설문 유형">
+        <TouchableOpacity style={optionType.item}>
+          <MaterialIcons name="short-text" size={24} />
+          <Text style={optionType.label}>단답형</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={optionType.item}>
+          <MaterialIcons name="notes" size={24} />
+          <Text style={optionType.label}>장문형</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={optionType.item}>
+          <MaterialIcons name="radio-button-checked" size={24} />
+          <Text style={optionType.label}>객관식 질문</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={optionType.item}>
+          <MaterialIcons name="check-box" size={24} />
+          <Text style={optionType.label}>체크박스</Text>
+        </TouchableOpacity>
       </BottomSheet>
     </>
   );
