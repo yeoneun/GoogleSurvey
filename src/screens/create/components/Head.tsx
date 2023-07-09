@@ -83,7 +83,6 @@ export default function Head() {
           value={form.title}
           onChangeText={dispatchTitle}
           placeholder="설문지 제목"
-          placeholderTextColor={GlobalStyle.placeholder.color}
           style={layout.titleInput}
           onFocus={onTitleFocus}
           onBlur={onTitleBlur}
@@ -98,7 +97,6 @@ export default function Head() {
           value={form.description}
           onChangeText={dispatchDescription}
           placeholder="설문지 설명"
-          placeholderTextColor={GlobalStyle.placeholder.color}
           onFocus={onDescriptonFocus}
           onBlur={onDescriptonBlur}
           style={layout.descriptionInput}
