@@ -20,6 +20,7 @@ import {
 } from "utils/redux/slices/formSlice";
 import FormTypeSelector from "@components/form/FormTypeSelector";
 import Check from "@components/form/Check";
+import FormOptionEditor from "@components/form/FormOptionEditor";
 
 interface Props {
   index: number;
@@ -93,16 +94,12 @@ export default function FormList(props: Props) {
             {currentForm.options!.map((option, optionIndex) => (
               <View key={`form_${index}_option_${optionIndex}`} style={options.item}>
                 {currentForm.type === "radio" ? <Radio /> : <Check />}
-                <TextInput
+                <FormOptionEditor
                   value={currentForm.options![optionIndex].label}
-                  onChangeText={(value: string) => {
+                  setValue={(value: string) => {
                     dispatchFormOptionLabel(optionIndex, value);
                   }}
-                  style={options.textInput}
                 />
-                <View style={options.iconButton}>
-                  <Ionicons name="image" size={20} color={GlobalStyle.lineIcon.color} />
-                </View>
                 {currentForm.options!.length > 1 && (
                   <TouchableOpacity onPress={() => removeOption(optionIndex)} style={options.iconButton}>
                     <Ionicons name="close" size={24} color={GlobalStyle.lineIcon.color} />
@@ -178,7 +175,6 @@ const options = StyleSheet.create({
   item: { flexDirection: "row", alignItems: "center", marginBottom: 12 },
   smallItem: { paddingLeft: 6, height: 40, alignItems: "center" },
   smallItemLabel: { paddingLeft: 10 },
-  textInput: { marginLeft: 10, height: 40, fontSize: 15, flex: 1 },
   iconButton: { width: 40, height: undefined, aspectRatio: 1, alignItems: "center", justifyContent: "center" },
 
   etcLabelContainer: { flexDirection: "row", alignItems: "center", flex: 1 },
