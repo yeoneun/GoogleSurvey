@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useRef, useState } from "react";
+import React, { useState } from "react";
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import Container from "./Container";
 import { Ionicons } from "@expo/vector-icons";
@@ -6,21 +6,15 @@ import GlobalStyle from "@styles/GlobalStyles";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import Switch from "@components/form/Switch";
 import Radio from "@components/form/Radio";
-import BottomSheet from "@gorhom/bottom-sheet";
 
-export default function FormList() {
+interface Props {
+  index: number;
+  onPressOptionType: (formIndex: number) => void;
+}
+
+export default function FormList(props: Props) {
+  const { index, onPressOptionType } = props;
   const [isNecessary, setIsNecessary] = useState(false);
-
-  // ref
-  const bottomSheetRef = useRef<BottomSheet>(null);
-
-  // variables
-  const snapPoints = useMemo(() => [1, "50%"], []);
-
-  // callbacks
-  const handleSheetChanges = useCallback((index: number) => {
-    console.log("handleSheetChanges", index);
-  }, []);
 
   return (
     <>
@@ -31,7 +25,7 @@ export default function FormList() {
           <TouchableOpacity style={layout.imageButton}>
             <Ionicons name="image" size={24} color={GlobalStyle.lineIcon.color} />
           </TouchableOpacity>
-          <TouchableOpacity style={layout.typeButton}>
+          <TouchableOpacity onPress={() => onPressOptionType(index)} style={layout.typeButton}>
             <Text>객관식 질문</Text>
           </TouchableOpacity>
         </View>
@@ -66,18 +60,6 @@ export default function FormList() {
           </View>
         </View>
       </Container>
-
-      <BottomSheet
-        ref={bottomSheetRef}
-        index={1}
-        snapPoints={snapPoints}
-        onChange={handleSheetChanges}
-        backgroundStyle={{ backgroundColor: "green" }}
-      >
-        <View style={{ backgroundColor: "pink" }}>
-          <Text>Awesome 🎉</Text>
-        </View>
-      </BottomSheet>
     </>
   );
 }
