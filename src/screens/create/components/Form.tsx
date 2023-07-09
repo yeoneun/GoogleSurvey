@@ -6,6 +6,7 @@ import { Ionicons } from "@expo/vector-icons";
 import GlobalStyle from "@styles/GlobalStyles";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import Switch from "@components/form/Switch";
+import Radio from "@components/form/Radio";
 
 export default function FormList() {
   const [isNecessary, setIsNecessary] = useState(false);
@@ -13,6 +14,7 @@ export default function FormList() {
     <>
       <Container style={layout.container}>
         <TextInput placeholder="질문" style={layout.textInput} multiline textAlignVertical="center" />
+
         <View style={layout.toolArea}>
           <TouchableOpacity style={layout.imageButton}>
             <Ionicons name="image" size={24} color={GlobalStyle.lineIcon.color} />
@@ -21,12 +23,33 @@ export default function FormList() {
             <Text>객관식 질문</Text>
           </TouchableOpacity>
         </View>
+
         <View style={options.container}>
-          <View style={[options.button, necessary.container]}>
+          <View style={options.item}>
+            <Radio />
+            <TextInput value="옵션 1" style={options.textInput} />
+          </View>
+          <View style={options.item}>
+            <Radio />
+            <TextInput value="옵션 2" style={[options.textInput, options.textInputFocused]} />
+            <View style={options.imageButton}>
+              <Ionicons name="image" size={24} color={GlobalStyle.lineIcon.color} />
+            </View>
+          </View>
+          <View style={[options.item, options.addOption]}>
+            <Radio />
+            <Text style={options.addOptionLabel}>
+              옵션 추가 또는 <Text style={options.addOptionLabelPressable}>'기타' 추가</Text>
+            </Text>
+          </View>
+        </View>
+
+        <View style={bottom.container}>
+          <View style={[bottom.button, necessary.container]}>
             <Text style={necessary.text}>필수</Text>
             <Switch onValueChange={setIsNecessary} value={isNecessary} style={necessary.switch} />
           </View>
-          <View style={[options.button, options.moreButton]}>
+          <View style={[bottom.button, bottom.moreButton]}>
             <MaterialCommunityIcons name="dots-vertical" size={24} color={GlobalStyle.lineIcon.color} />
           </View>
         </View>
@@ -36,6 +59,18 @@ export default function FormList() {
 }
 
 const options = StyleSheet.create({
+  container: { marginTop: 16 },
+  item: { flexDirection: "row", alignItems: "center", marginBottom: 12 },
+  textInput: { marginLeft: 10, height: 40, fontSize: 15, flex: 1 },
+  textInputFocused: { borderBottomWidth: 2, borderColor: GlobalStyle.point.color },
+  imageButton: { width: 54, height: 40, alignItems: "center", justifyContent: "center" },
+
+  addOption: { paddingLeft: 6, height: 40, alignItems: "center" },
+  addOptionLabel: { paddingLeft: 10 },
+  addOptionLabelPressable: { color: GlobalStyle.blue.color, fontWeight: "500" },
+});
+
+const bottom = StyleSheet.create({
   container: {
     flexDirection: "row",
     alignItems: "center",

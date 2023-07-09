@@ -19,6 +19,9 @@ const GlobalStyle = StyleSheet.create({
   lineIcon: {
     color: "#888",
   },
+  blue: {
+    color: "#1973E7",
+  },
 });
 
 export default GlobalStyle;
