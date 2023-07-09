@@ -1,12 +1,11 @@
 import React, { ReactNode } from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleProp, StyleSheet, View, ViewStyle } from "react-native";
 import GlobalStyle from "@styles/GlobalStyles";
-import { StyleProps } from "react-native-reanimated";
 
 interface Props {
   children: ReactNode;
   focused?: boolean;
-  style?: StyleProps;
+  style?: StyleProp<ViewStyle>;
 }
 
 export default function Container(props: Props) {

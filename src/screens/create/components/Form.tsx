@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useState } from "react";
-import { Pressable, StyleSheet, Text, TextInput as RNTextInput, TouchableOpacity, View } from "react-native";
+import React, { useEffect, useState } from "react";
+import { Pressable, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import TextInput from "@components/form/TextInput";
 import Container from "./Container";
 import { Ionicons } from "@expo/vector-icons";
@@ -32,7 +32,6 @@ interface Props {
 export default function FormList(props: Props) {
   const { index, onPressOptionType } = props;
   const { showActionSheetWithOptions } = useActionSheet();
-  const questionRef = useRef<RNTextInput>(null);
   const form = useAppSelector((state) => state.form);
   const { focusedFormIndex } = useAppSelector((state) => state.focus);
   const currentForm = form.forms[index];
@@ -232,7 +231,7 @@ const necessary = StyleSheet.create({
 });
 
 const layout = StyleSheet.create({
-  container: { marginTop: 12 },
+  container: { marginTop: 12, position: "relative" },
   focusedContainer: { paddingBottom: 0 },
   question: {
     fontSize: 16,

@@ -1,5 +1,15 @@
 import React, { useRef } from "react";
-import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View, Keyboard } from "react-native";
+import {
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  Keyboard,
+  TouchableWithoutFeedback,
+  TouchableNativeFeedback,
+  Pressable,
+} from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import Wrapper from "@components/layout/Wrapper";
 import Head from "./components/Head";

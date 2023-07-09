@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
 import { StyleSheet, Animated } from "react-native";
 import GlobalStyle from "styles/GlobalStyles";
 import TextDecoration from "@components/form/TextDecoration";
@@ -6,11 +6,12 @@ import Container from "./Container";
 import { useAppDispatch, useAppSelector } from "hooks/useRedux";
 import { setDescription, setTitle } from "utils/redux/slices/formSlice";
 import TextInput from "@components/form/TextInput";
+import { removeFocusedFormIndex, setHeadFocused } from "utils/redux/slices/focusSlice";
 
 export default function Head() {
   const form = useAppSelector((state) => state.form);
+  const { headFocused } = useAppSelector((state) => state.focus);
   const dispatch = useAppDispatch();
-  const [focused, setFocused] = useState(false);
 
   const dispatchTitle = (value: string) => dispatch(setTitle(value));
   const dispatchDescription = (value: string) => dispatch(setDescription(value));
@@ -20,8 +21,13 @@ export default function Head() {
   const descriptionAreaMarginTop = useRef(new Animated.Value(10)).current;
   const descriptionAreaDecorationHeight = useRef(new Animated.Value(0)).current;
 
+  const onHeadFocused = () => {
+    dispatch(removeFocusedFormIndex());
+    dispatch(setHeadFocused(true));
+  };
+
   const onTitleFocus = () => {
-    setFocused(true);
+    onHeadFocused();
     Animated.parallel([
       Animated.timing(titleAreaMarginTop, {
         toValue: 24,
@@ -36,7 +42,7 @@ export default function Head() {
     ]).start();
   };
   const onTitleBlur = () => {
-    setFocused(false);
+    dispatch(setHeadFocused(false));
     Animated.parallel([
       Animated.timing(titleAreaMarginTop, {
         toValue: 0,
@@ -51,7 +57,7 @@ export default function Head() {
     ]).start();
   };
   const onDescriptonFocus = () => {
-    setFocused(true);
+    onHeadFocused();
     Animated.parallel([
       Animated.timing(descriptionAreaMarginTop, {
         toValue: 24,
@@ -66,7 +72,7 @@ export default function Head() {
     ]).start();
   };
   const onDescriptonBlur = () => {
-    setFocused(false);
+    dispatch(setHeadFocused(false));
     Animated.parallel([
       Animated.timing(descriptionAreaMarginTop, {
         toValue: 10,
@@ -82,7 +88,7 @@ export default function Head() {
   };
 
   return (
-    <Container focused={focused} style={layout.container}>
+    <Container focused={headFocused} style={layout.container}>
       <Animated.View style={{ marginTop: titleAreaMarginTop }}>
         <TextInput
           value={form.title}

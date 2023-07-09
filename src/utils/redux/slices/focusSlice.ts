@@ -17,10 +17,12 @@ export const focusSlice = createSlice({
   reducers: {
     setHeadFocused: (state, action: PayloadAction<boolean>) => {
       console.log("setHeadFocused", action.payload);
+      removeFocusedFormIndex();
       state.headFocused = action.payload;
     },
     setFocusedFormIndex: (state, action: PayloadAction<number>) => {
       console.log("setFocusedFormIndex", action.payload);
+      setHeadFocused(false);
       state.focusedFormIndex = action.payload;
     },
     removeFocusedFormIndex: (state) => {
