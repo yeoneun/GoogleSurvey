@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Pressable, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import TextInput from "@components/form/TextInput";
 import Container from "./Container";
@@ -9,7 +9,7 @@ import Switch from "@components/form/Switch";
 import Radio from "@components/form/Radio";
 import { useActionSheet } from "@expo/react-native-action-sheet";
 import { useAppDispatch, useAppSelector } from "hooks/useRedux";
-import { deleteForm } from "utils/redux/slices/formSlice";
+import { deleteForm, setNecessary } from "utils/redux/slices/formSlice";
 
 interface Props {
   index: number;
@@ -19,9 +19,13 @@ interface Props {
 export default function FormList(props: Props) {
   const { index, onPressOptionType } = props;
   const { showActionSheetWithOptions } = useActionSheet();
-  const [isNecessary, setIsNecessary] = useState(false);
   const form = useAppSelector((state) => state.form);
+  const currentForm = form.forms[index];
   const dispatch = useAppDispatch();
+
+  const toggleNecessary = (state: boolean) => {
+    dispatch(setNecessary({ index, necessary: state }));
+  };
 
   const onPressMore = () => {
     const options = ["항목 복제", "삭제", "취소"];
@@ -88,7 +92,7 @@ export default function FormList(props: Props) {
         <View style={bottom.container}>
           <View style={[bottom.button, necessary.container]}>
             <Text style={necessary.text}>필수</Text>
-            <Switch onValueChange={setIsNecessary} value={isNecessary} style={necessary.switch} />
+            <Switch onValueChange={toggleNecessary} value={currentForm.necessary} style={necessary.switch} />
           </View>
           <Pressable onPress={onPressMore} style={[bottom.button, bottom.moreButton]}>
             <MaterialCommunityIcons name="dots-vertical" size={24} color={GlobalStyle.lineIcon.color} />

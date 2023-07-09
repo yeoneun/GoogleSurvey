@@ -38,21 +38,30 @@ export const formSlice = createSlice({
   initialState,
   reducers: {
     setTitle: (state, action: PayloadAction<string>) => {
+      console.log("setTitle", action.payload);
       state.title = action.payload;
     },
     setDescription: (state, action: PayloadAction<string>) => {
+      console.log("setDescription", action.payload);
       state.description = action.payload;
     },
     addForm: (state) => {
+      console.log("addForm");
       state.forms.push(defaultForm);
     },
     deleteForm: (state, action: PayloadAction<number>) => {
+      console.log("deleteForm", action.payload);
       state.forms.splice(action.payload, 1);
+    },
+    setNecessary: (state, action: PayloadAction<{ index: number; necessary: boolean }>) => {
+      console.log("setNecessary", action.payload);
+      const { index, necessary } = action.payload;
+      state.forms[index].necessary = necessary;
     },
   },
 });
 
-export const { setTitle, setDescription, addForm, deleteForm } = formSlice.actions;
+export const { setTitle, setDescription, addForm, deleteForm, setNecessary } = formSlice.actions;
 
 export const selectForm = (state: RootState) => state.form;
 
