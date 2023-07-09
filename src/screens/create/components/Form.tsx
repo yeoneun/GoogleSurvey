@@ -1,11 +1,13 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import TextInput from "@components/form/TextInput";
 import Container from "./Container";
 import { Ionicons } from "@expo/vector-icons";
 import GlobalStyle from "@styles/GlobalStyles";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import Switch from "@components/form/Switch";
 import Radio from "@components/form/Radio";
+import { formProps } from "utils/redux/slices/formSlice";
 
 interface Props {
   index: number;
@@ -37,7 +39,7 @@ export default function FormList(props: Props) {
           </View>
           <View style={options.item}>
             <Radio />
-            <TextInput value="옵션 2" style={[options.textInput, options.textInputFocused]} />
+            <TextInput value="옵션 2" style={options.textInput} />
             <View style={options.imageButton}>
               <Ionicons name="image" size={24} color={GlobalStyle.lineIcon.color} />
             </View>
@@ -68,7 +70,6 @@ const options = StyleSheet.create({
   container: { marginTop: 16 },
   item: { flexDirection: "row", alignItems: "center", marginBottom: 12 },
   textInput: { marginLeft: 10, height: 40, fontSize: 15, flex: 1 },
-  textInputFocused: { borderBottomWidth: 2, borderColor: GlobalStyle.point.color },
   imageButton: { width: 54, height: 40, alignItems: "center", justifyContent: "center" },
 
   addOption: { paddingLeft: 6, height: 40, alignItems: "center" },

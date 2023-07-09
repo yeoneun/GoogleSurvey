@@ -7,11 +7,13 @@ import GlobalStyle from "@styles/GlobalStyles";
 import Form from "./components/Form";
 import BottomSheet, { BottomSheetBackdrop, BottomSheetBackdropProps } from "@gorhom/bottom-sheet";
 import { MaterialIcons } from "@expo/vector-icons";
+import { useAppDispatch, useAppSelector } from "hooks/useRedux";
+import { addForm } from "utils/redux/slices/formSlice";
 
 export default function HomeScreen() {
   const bottomSheetRef = useRef<BottomSheet>(null);
-
-  const addForm = () => {};
+  const form = useAppSelector((state) => state.form);
+  const dispatch = useAppDispatch();
 
   const renderBackdrop = useCallback(
     (props: BottomSheetBackdropProps) => (
@@ -29,20 +31,24 @@ export default function HomeScreen() {
 
   return (
     <>
-      <ScrollView style={layout.scrollView} keyboardShouldPersistTaps="handled">
+      <ScrollView contentInsetAdjustmentBehavior="automatic" keyboardShouldPersistTaps="handled">
         <SafeAreaView>
           <Wrapper>
             <Head />
-            <Form index={0} onPressOptionType={() => bottomSheetRef.current?.expand()} />
+            {form.forms.map((item, index) => (
+              <Form key={`form_${index}`} index={index} onPressOptionType={() => bottomSheetRef.current?.expand()} />
+            ))}
           </Wrapper>
         </SafeAreaView>
       </ScrollView>
-      <Pressable onPress={addForm} style={addButton.container}>
+
+      <Pressable onPress={() => dispatch(addForm())} style={addButton.container}>
         <Ionicons name="add-sharp" size={32} color={"white"} />
       </Pressable>
 
       <BottomSheet
         ref={bottomSheetRef}
+        index={-1}
         snapPoints={["30%"]}
         handleStyle={{ display: "none" }}
         enablePanDownToClose
@@ -80,10 +86,6 @@ const bottomSheet = StyleSheet.create({
 const optionType = StyleSheet.create({
   item: { flexDirection: "row", alignItems: "center", height: 42 },
   label: { fontSize: 15, paddingLeft: 12, fontWeight: "500", flex: 1 },
-});
-
-const layout = StyleSheet.create({
-  scrollView: { flex: 1 },
 });
 
 const addButton = StyleSheet.create({
