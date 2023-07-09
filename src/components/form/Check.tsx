@@ -1,6 +1,6 @@
 import GlobalStyle from "@styles/GlobalStyles";
-import React, { useState } from "react";
-import { View, StyleSheet, ViewStyle, Pressable, Text } from "react-native";
+import React from "react";
+import { View, StyleSheet, Pressable, Text } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
 interface Props {

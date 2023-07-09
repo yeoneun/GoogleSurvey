@@ -10,7 +10,6 @@ import {
   Platform,
   Keyboard,
   TouchableWithoutFeedback,
-  Pressable,
 } from "react-native";
 import Wrapper from "@components/layout/Wrapper";
 import Head from "./components/Head";

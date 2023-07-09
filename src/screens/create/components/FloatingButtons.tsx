@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import { Pressable, StyleSheet, Keyboard, TouchableOpacity } from "react-native";
+import { StyleSheet, Keyboard, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import GlobalStyle from "@styles/GlobalStyles";
 import { useAppDispatch } from "hooks/useRedux";
