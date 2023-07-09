@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { Pressable, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity } from "react-native";
+import { Pressable, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Wrapper from "@components/layout/Wrapper";
 import Head from "./components/Head";
 import { Ionicons } from "@expo/vector-icons";
@@ -34,9 +34,11 @@ export default function HomeScreen() {
         <SafeAreaView>
           <Wrapper>
             <Head />
-            {form.forms.map((item, index) => (
-              <Form key={`form_${index}`} index={index} onPressOptionType={openFormTypeSheet} />
-            ))}
+            <View style={layout.formContainer}>
+              {form.forms.map((item, index) => (
+                <Form key={`form_${index}`} index={index} onPressOptionType={openFormTypeSheet} />
+              ))}
+            </View>
           </Wrapper>
         </SafeAreaView>
       </ScrollView>
@@ -67,9 +69,8 @@ export default function HomeScreen() {
   );
 }
 
-const bottomSheet = StyleSheet.create({
-  container: { padding: 20 },
-  title: { color: GlobalStyle.gray.color, fontWeight: "bold", marginBottom: 10, fontSize: 13 },
+const layout = StyleSheet.create({
+  formContainer: { paddingBottom: 100 },
 });
 
 const optionType = StyleSheet.create({
