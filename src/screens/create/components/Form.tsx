@@ -18,6 +18,7 @@ import {
   setNecessary,
 } from "utils/redux/slices/formSlice";
 import FormTypeSelector from "@components/form/FormTypeSelector";
+import Check from "@components/form/Check";
 
 interface Props {
   index: number;
@@ -87,7 +88,7 @@ export default function FormList(props: Props) {
           <>
             {currentForm.options!.map((option, optionIndex) => (
               <View key={`form_${index}_option_${optionIndex}`} style={options.item}>
-                <Radio />
+                {currentForm.type === "radio" ? <Radio /> : <Check />}
                 <TextInput value={currentForm.options![optionIndex].label} style={options.textInput} />
                 <View style={options.iconButton}>
                   <Ionicons name="image" size={20} color={GlobalStyle.lineIcon.color} />
@@ -101,7 +102,7 @@ export default function FormList(props: Props) {
             ))}
             {currentForm.useEtc && (
               <View style={[options.item, options.smallItem]}>
-                <Radio />
+                {currentForm.type === "radio" ? <Radio /> : <Check />}
                 <View style={options.etcLabelContainer}>
                   <Text style={[options.smallItemLabel, options.etcLabel]}>기타...</Text>
                   <TouchableOpacity onPress={disuseEtc} style={options.iconButton}>
@@ -111,7 +112,7 @@ export default function FormList(props: Props) {
               </View>
             )}
             <View style={[options.item, options.smallItem]}>
-              <Radio />
+              {currentForm.type === "radio" ? <Radio /> : <Check />}
               <Text style={options.smallItemLabel}>
                 <Text onPress={addOption} style={options.addOption}>
                   옵션 추가
