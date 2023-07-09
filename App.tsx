@@ -4,11 +4,14 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { DefaultTheme } from "@react-navigation/native";
 import Create from "@screens/create/Create";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+// import store from "./store";
+import { Provider } from "react-redux";
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
+    // <Provider store={store}>
     <GestureHandlerRootView style={{ flex: 1 }}>
       <NavigationContainer
         theme={{
@@ -24,5 +27,6 @@ export default function App() {
         </Stack.Navigator>
       </NavigationContainer>
     </GestureHandlerRootView>
+    // </Provider>
   );
 }
