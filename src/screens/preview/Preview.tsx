@@ -9,6 +9,7 @@ import {
   Platform,
   KeyboardAvoidingView,
 } from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import Wrapper from "@components/layout/Wrapper";
 import Container from "@screens/create/components/Container";
 import { useAppSelector } from "hooks/useRedux";
@@ -66,10 +67,12 @@ export default function Preview(props: Props) {
   };
 
   return (
-    <KeyboardAvoidingView
-      style={{ flex: 1 }}
-      behavior={Platform.OS === "ios" ? "padding" : undefined}
-      keyboardVerticalOffset={Platform.OS === "ios" ? 0 : -200}
+    <KeyboardAwareScrollView
+      extraHeight={100}
+      enableOnAndroid={true}
+      enableResetScrollToCoords={true}
+      keyboardShouldPersistTaps="handled"
+      contentInsetAdjustmentBehavior="automatic"
     >
       <ScrollView contentInsetAdjustmentBehavior="automatic" keyboardShouldPersistTaps="handled">
         <SafeAreaView>
@@ -103,7 +106,7 @@ export default function Preview(props: Props) {
           </Wrapper>
         </SafeAreaView>
       </ScrollView>
-    </KeyboardAvoidingView>
+    </KeyboardAwareScrollView>
   );
 }
 
