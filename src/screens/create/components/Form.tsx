@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Pressable, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import TextInput from "@components/form/TextInput";
 import Container from "./Container";
 import { Ionicons } from "@expo/vector-icons";
@@ -7,7 +7,9 @@ import GlobalStyle from "@styles/GlobalStyles";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import Switch from "@components/form/Switch";
 import Radio from "@components/form/Radio";
-import { formProps } from "utils/redux/slices/formSlice";
+import { useActionSheet } from "@expo/react-native-action-sheet";
+import { useAppDispatch, useAppSelector } from "hooks/useRedux";
+import { deleteForm } from "utils/redux/slices/formSlice";
 
 interface Props {
   index: number;
@@ -16,7 +18,38 @@ interface Props {
 
 export default function FormList(props: Props) {
   const { index, onPressOptionType } = props;
+  const { showActionSheetWithOptions } = useActionSheet();
   const [isNecessary, setIsNecessary] = useState(false);
+  const form = useAppSelector((state) => state.form);
+  const dispatch = useAppDispatch();
+
+  const onPressMore = () => {
+    const options = ["항목 복제", "삭제", "취소"];
+    const destructiveButtonIndex = 1;
+    const cancelButtonIndex = 2;
+
+    showActionSheetWithOptions(
+      {
+        options,
+        cancelButtonIndex,
+        destructiveButtonIndex,
+      },
+      (selectedIndex?: number) => {
+        switch (selectedIndex) {
+          case 0:
+            // 항목 복제
+            break;
+
+          case destructiveButtonIndex:
+            dispatch(deleteForm(index));
+            break;
+
+          case cancelButtonIndex:
+          // Canceled
+        }
+      }
+    );
+  };
 
   return (
     <>
@@ -57,9 +90,9 @@ export default function FormList(props: Props) {
             <Text style={necessary.text}>필수</Text>
             <Switch onValueChange={setIsNecessary} value={isNecessary} style={necessary.switch} />
           </View>
-          <View style={[bottom.button, bottom.moreButton]}>
+          <Pressable onPress={onPressMore} style={[bottom.button, bottom.moreButton]}>
             <MaterialCommunityIcons name="dots-vertical" size={24} color={GlobalStyle.lineIcon.color} />
-          </View>
+          </Pressable>
         </View>
       </Container>
     </>

@@ -44,13 +44,15 @@ export const formSlice = createSlice({
       state.description = action.payload;
     },
     addForm: (state) => {
-      console.log("add Form");
       state.forms.push(defaultForm);
+    },
+    deleteForm: (state, action: PayloadAction<number>) => {
+      state.forms.splice(action.payload, 1);
     },
   },
 });
 
-export const { setTitle, setDescription, addForm } = formSlice.actions;
+export const { setTitle, setDescription, addForm, deleteForm } = formSlice.actions;
 
 export const selectForm = (state: RootState) => state.form;
 
