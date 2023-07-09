@@ -8,6 +8,7 @@ import {
   View,
   KeyboardAvoidingView,
   Platform,
+  Keyboard,
 } from "react-native";
 import Wrapper from "@components/layout/Wrapper";
 import Head from "./components/Head";
@@ -32,6 +33,7 @@ export default function Create(props: Props) {
   const [currentFormIndex, setCurrentFormIndex] = useState(0);
 
   const openFormTypeSheet = (formIndex: number) => {
+    Keyboard.dismiss();
     setCurrentFormIndex(formIndex);
     formTypeSheet.current?.expand();
   };
