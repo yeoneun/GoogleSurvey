@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import { Pressable, StyleSheet, Keyboard } from "react-native";
+import { Pressable, StyleSheet, Keyboard, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import GlobalStyle from "@styles/GlobalStyles";
 import { useAppDispatch } from "hooks/useRedux";
@@ -33,24 +33,33 @@ export default function FloatingButtons() {
   }, []);
 
   return (
-    <Animated.View style={[addButton.container, { bottom: floatingButtonBottom }]}>
-      <Pressable onPress={() => dispatch(addForm())}>
+    <Animated.View style={[layout.container, { bottom: floatingButtonBottom }]}>
+      <TouchableOpacity onPress={() => dispatch(addForm())} style={layout.button}>
         <Ionicons name="add-sharp" size={32} color={"white"} />
-      </Pressable>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={() => {}} style={layout.button}>
+        <Ionicons name="eye" size={24} color="white" />
+      </TouchableOpacity>
     </Animated.View>
   );
 }
-const addButton = StyleSheet.create({
+const layout = StyleSheet.create({
   container: {
     position: "absolute",
     bottom: 30,
     backgroundColor: GlobalStyle.point.color,
-    width: 52,
     height: 52,
-    borderRadius: 32,
+    borderRadius: 52 / 2,
     alignSelf: "center",
+    flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    paddingLeft: 2,
+    paddingHorizontal: 5,
+  },
+  button: {
+    width: 65,
+    height: "100%",
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
