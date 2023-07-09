@@ -6,7 +6,12 @@ import { useAppDispatch } from "hooks/useRedux";
 import { addForm } from "utils/redux/slices/formSlice";
 import { Animated } from "react-native";
 
-export default function FloatingButtons() {
+interface Props {
+  navigateToPreview: () => void;
+}
+
+export default function FloatingButtons(props: Props) {
+  const { navigateToPreview } = props;
   const dispatch = useAppDispatch();
   const floatingButtonBottom = useRef(new Animated.Value(30)).current;
 
@@ -37,7 +42,7 @@ export default function FloatingButtons() {
       <TouchableOpacity onPress={() => dispatch(addForm())} style={layout.button}>
         <Ionicons name="add-sharp" size={32} color={"white"} />
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => {}} style={layout.button}>
+      <TouchableOpacity onPress={navigateToPreview} style={layout.button}>
         <Ionicons name="eye" size={24} color="white" />
       </TouchableOpacity>
     </Animated.View>

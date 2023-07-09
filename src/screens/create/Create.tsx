@@ -18,8 +18,13 @@ import { useAppDispatch, useAppSelector } from "hooks/useRedux";
 import { FormTypes, setFormType } from "utils/redux/slices/formSlice";
 import RNBottomSheet from "@gorhom/bottom-sheet/lib/typescript/components/bottomSheet/BottomSheet";
 import FloatingButtons from "./FloatingButtons";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { ScreenParams } from "../../../App";
 
-export default function HomeScreen() {
+type Props = NativeStackScreenProps<ScreenParams, "Create">;
+
+export default function Create(props: Props) {
+  const { navigation } = props;
   const formTypeSheet = useRef<RNBottomSheet>(null);
   const form = useAppSelector((state) => state.form);
   const dispatch = useAppDispatch();
@@ -30,10 +35,12 @@ export default function HomeScreen() {
     setCurrentFormIndex(formIndex);
     formTypeSheet.current?.expand();
   };
-
   const dispatchFormType = (type: FormTypes) => {
     dispatch(setFormType({ index: currentFormIndex, value: type }));
     formTypeSheet.current?.close();
+  };
+  const goPreview = () => {
+    navigation.navigate("Preview");
   };
 
   return (
@@ -55,7 +62,7 @@ export default function HomeScreen() {
         </SafeAreaView>
       </ScrollView>
 
-      <FloatingButtons />
+      <FloatingButtons navigateToPreview={goPreview} />
 
       <BottomSheet ref={formTypeSheet} title="설문 유형">
         <TouchableOpacity onPress={() => dispatchFormType("shortText")} style={optionType.item}>
