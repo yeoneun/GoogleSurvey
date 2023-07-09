@@ -17,7 +17,7 @@ export default function TextInput(props: Props) {
   const handleFocus = (): void => {
     inputRef.current?.focus();
     inputRef.current?.setNativeProps({
-      style: [layout.textInput, layout.focusedTextInput],
+      style: [layout.textInput, layout.focusedTextInput, props.style],
     });
     onFocus && onFocus();
   };
@@ -25,7 +25,7 @@ export default function TextInput(props: Props) {
   const handleBlur = (): void => {
     inputRef.current?.blur();
     inputRef.current?.setNativeProps({
-      style: layout.textInput,
+      style: [layout.textInput, props.style],
     });
     onBlur && onBlur();
   };
