@@ -9,7 +9,14 @@ import Switch from "@components/form/Switch";
 import Radio from "@components/form/Radio";
 import { useActionSheet } from "@expo/react-native-action-sheet";
 import { useAppDispatch, useAppSelector } from "hooks/useRedux";
-import { deleteForm, setEtcUsage, setFormQuestion, setNecessary } from "utils/redux/slices/formSlice";
+import {
+  addFormOption,
+  deleteForm,
+  removeFormOption,
+  setEtcUsage,
+  setFormQuestion,
+  setNecessary,
+} from "utils/redux/slices/formSlice";
 import FormTypeSelector from "@components/form/FormTypeSelector";
 
 interface Props {
@@ -29,6 +36,12 @@ export default function FormList(props: Props) {
   };
   const toggleNecessary = (value: boolean) => {
     dispatch(setNecessary({ index, value }));
+  };
+  const addOption = () => {
+    dispatch(addFormOption({ index }));
+  };
+  const removeOption = (optionIndex: number) => {
+    dispatch(removeFormOption({ index, optionIndex }));
   };
   const useEtc = () => {
     dispatch(setEtcUsage({ index, value: true }));
@@ -80,7 +93,7 @@ export default function FormList(props: Props) {
                   <Ionicons name="image" size={20} color={GlobalStyle.lineIcon.color} />
                 </View>
                 {currentForm.options!.length > 1 && (
-                  <TouchableOpacity style={options.iconButton}>
+                  <TouchableOpacity onPress={() => removeOption(optionIndex)} style={options.iconButton}>
                     <Ionicons name="close" size={24} color={GlobalStyle.lineIcon.color} />
                   </TouchableOpacity>
                 )}
@@ -100,7 +113,7 @@ export default function FormList(props: Props) {
             <View style={[options.item, options.smallItem]}>
               <Radio />
               <Text style={options.addOptionLabel}>
-                옵션 추가 또는{" "}
+                <Text onPress={addOption}>옵션 추가</Text> 또는{" "}
                 <Text onPress={useEtc} style={options.addOptionLabelPressable}>
                   '기타' 추가
                 </Text>

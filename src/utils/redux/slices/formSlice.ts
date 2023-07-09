@@ -79,6 +79,16 @@ export const formSlice = createSlice({
       const { index, value } = action.payload;
       state.forms[index].useEtc = value;
     },
+    addFormOption: (state, action: PayloadAction<{ index: number }>) => {
+      console.log("addFormOption", action.payload);
+      const { index } = action.payload;
+      state.forms[index].options?.push({ label: `옵션 ${state.forms[index].options!.length + 1}` });
+    },
+    removeFormOption: (state, action: PayloadAction<{ index: number; optionIndex: number }>) => {
+      console.log("removeFormOption", action.payload);
+      const { index, optionIndex } = action.payload;
+      state.forms[index].options!.splice(optionIndex, 1);
+    },
     setNecessary: (state, action: PayloadAction<{ index: number; value: boolean }>) => {
       console.log("setNecessary", action.payload);
       const { index, value } = action.payload;
@@ -95,6 +105,8 @@ export const {
   setFormQuestion,
   setFormType,
   setEtcUsage,
+  addFormOption,
+  removeFormOption,
   setNecessary,
 } = formSlice.actions;
 
