@@ -20,7 +20,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { useAppDispatch, useAppSelector } from "hooks/useRedux";
 import { FormTypes, setAllFormUnFocused, setFormType } from "utils/redux/slices/formSlice";
 import RNBottomSheet from "@gorhom/bottom-sheet/lib/typescript/components/bottomSheet/BottomSheet";
-import FloatingButtons from "./FloatingButtons";
+import FloatingButtons from "./components/FloatingButtons";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { ScreenParams } from "../../../App";
 
