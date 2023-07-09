@@ -1,15 +1,27 @@
-import React, { useState } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import React, { useCallback, useMemo, useRef, useState } from "react";
+import { StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import Container from "./Container";
-import TextInput from "@components/form/TextInput";
 import { Ionicons } from "@expo/vector-icons";
 import GlobalStyle from "@styles/GlobalStyles";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import Switch from "@components/form/Switch";
 import Radio from "@components/form/Radio";
+import BottomSheet from "@gorhom/bottom-sheet";
 
 export default function FormList() {
   const [isNecessary, setIsNecessary] = useState(false);
+
+  // ref
+  const bottomSheetRef = useRef<BottomSheet>(null);
+
+  // variables
+  const snapPoints = useMemo(() => [1, "50%"], []);
+
+  // callbacks
+  const handleSheetChanges = useCallback((index: number) => {
+    console.log("handleSheetChanges", index);
+  }, []);
+
   return (
     <>
       <Container style={layout.container}>
@@ -54,6 +66,18 @@ export default function FormList() {
           </View>
         </View>
       </Container>
+
+      <BottomSheet
+        ref={bottomSheetRef}
+        index={1}
+        snapPoints={snapPoints}
+        onChange={handleSheetChanges}
+        backgroundStyle={{ backgroundColor: "green" }}
+      >
+        <View style={{ backgroundColor: "pink" }}>
+          <Text>Awesome 🎉</Text>
+        </View>
+      </BottomSheet>
     </>
   );
 }
