@@ -1,5 +1,16 @@
-import React, { useRef, useState } from "react";
-import { Pressable, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import React, { useEffect, useRef, useState } from "react";
+import {
+  Pressable,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  KeyboardAvoidingView,
+  Platform,
+  Keyboard,
+} from "react-native";
 import Wrapper from "@components/layout/Wrapper";
 import Head from "./components/Head";
 import { Ionicons } from "@expo/vector-icons";
@@ -10,13 +21,37 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { useAppDispatch, useAppSelector } from "hooks/useRedux";
 import { FormTypes, addForm, setFormType } from "utils/redux/slices/formSlice";
 import RNBottomSheet from "@gorhom/bottom-sheet/lib/typescript/components/bottomSheet/BottomSheet";
+import { Animated } from "react-native";
 
 export default function HomeScreen() {
   const formTypeSheet = useRef<RNBottomSheet>(null);
+  const floatingButtonBottom = useRef(new Animated.Value(30)).current;
   const form = useAppSelector((state) => state.form);
   const dispatch = useAppDispatch();
 
   const [currentFormIndex, setCurrentFormIndex] = useState(0);
+
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener("keyboardDidShow", () => {
+      Animated.timing(floatingButtonBottom, {
+        toValue: -100,
+        duration: 1,
+        useNativeDriver: false,
+      }).start();
+    });
+    const keyboardDidHideListener = Keyboard.addListener("keyboardDidHide", () => {
+      Animated.timing(floatingButtonBottom, {
+        toValue: 30,
+        duration: 200,
+        useNativeDriver: false,
+      }).start();
+    });
+
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
 
   const openFormTypeSheet = (formIndex: number) => {
     setCurrentFormIndex(formIndex);
@@ -29,7 +64,11 @@ export default function HomeScreen() {
   };
 
   return (
-    <>
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === "ios" ? "padding" : undefined}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 0 : -200}
+    >
       <ScrollView contentInsetAdjustmentBehavior="automatic" keyboardShouldPersistTaps="handled">
         <SafeAreaView>
           <Wrapper>
@@ -43,9 +82,11 @@ export default function HomeScreen() {
         </SafeAreaView>
       </ScrollView>
 
-      <Pressable onPress={() => dispatch(addForm())} style={addButton.container}>
-        <Ionicons name="add-sharp" size={32} color={"white"} />
-      </Pressable>
+      <Animated.View style={[addButton.container, { bottom: floatingButtonBottom }]}>
+        <Pressable onPress={() => dispatch(addForm())}>
+          <Ionicons name="add-sharp" size={32} color={"white"} />
+        </Pressable>
+      </Animated.View>
 
       <BottomSheet ref={formTypeSheet} title="설문 유형">
         <TouchableOpacity onPress={() => dispatchFormType("shortText")} style={optionType.item}>
@@ -65,7 +106,7 @@ export default function HomeScreen() {
           <Text style={optionType.label}>체크박스</Text>
         </TouchableOpacity>
       </BottomSheet>
-    </>
+    </KeyboardAvoidingView>
   );
 }
 
