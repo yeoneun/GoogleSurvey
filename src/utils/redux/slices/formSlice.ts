@@ -53,15 +53,20 @@ export const formSlice = createSlice({
       console.log("deleteForm", action.payload);
       state.forms.splice(action.payload, 1);
     },
-    setNecessary: (state, action: PayloadAction<{ index: number; necessary: boolean }>) => {
+    setFormQuestion: (state, action: PayloadAction<{ index: number; value: string }>) => {
+      console.log("setFormQuestion", action.payload);
+      const { index, value } = action.payload;
+      state.forms[index].question = value;
+    },
+    setNecessary: (state, action: PayloadAction<{ index: number; value: boolean }>) => {
       console.log("setNecessary", action.payload);
-      const { index, necessary } = action.payload;
-      state.forms[index].necessary = necessary;
+      const { index, value } = action.payload;
+      state.forms[index].necessary = value;
     },
   },
 });
 
-export const { setTitle, setDescription, addForm, deleteForm, setNecessary } = formSlice.actions;
+export const { setTitle, setDescription, addForm, deleteForm, setFormQuestion, setNecessary } = formSlice.actions;
 
 export const selectForm = (state: RootState) => state.form;
 

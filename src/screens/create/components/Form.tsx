@@ -9,7 +9,7 @@ import Switch from "@components/form/Switch";
 import Radio from "@components/form/Radio";
 import { useActionSheet } from "@expo/react-native-action-sheet";
 import { useAppDispatch, useAppSelector } from "hooks/useRedux";
-import { deleteForm, setNecessary } from "utils/redux/slices/formSlice";
+import { deleteForm, setFormQuestion, setNecessary } from "utils/redux/slices/formSlice";
 
 interface Props {
   index: number;
@@ -23,8 +23,11 @@ export default function FormList(props: Props) {
   const currentForm = form.forms[index];
   const dispatch = useAppDispatch();
 
-  const toggleNecessary = (state: boolean) => {
-    dispatch(setNecessary({ index, necessary: state }));
+  const dispatchQuestion = (value: string) => {
+    dispatch(setFormQuestion({ index, value }));
+  };
+  const toggleNecessary = (value: boolean) => {
+    dispatch(setNecessary({ index, value }));
   };
 
   const onPressMore = () => {
@@ -47,9 +50,6 @@ export default function FormList(props: Props) {
           case destructiveButtonIndex:
             dispatch(deleteForm(index));
             break;
-
-          case cancelButtonIndex:
-          // Canceled
         }
       }
     );
@@ -58,7 +58,14 @@ export default function FormList(props: Props) {
   return (
     <>
       <Container style={layout.container}>
-        <TextInput placeholder="질문" style={layout.textInput} multiline textAlignVertical="center" />
+        <TextInput
+          value={currentForm.question}
+          onChangeText={dispatchQuestion}
+          placeholder="질문"
+          style={layout.textInput}
+          multiline
+          textAlignVertical="center"
+        />
 
         <View style={layout.toolArea}>
           <TouchableOpacity style={layout.imageButton}>
