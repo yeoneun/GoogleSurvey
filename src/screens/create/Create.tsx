@@ -1,11 +1,25 @@
-import React, { useRef, useCallback } from "react";
-import { Pressable, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import React, { useRef, useCallback, useMemo, useEffect } from "react";
+import {
+  Dimensions,
+  Pressable,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import Wrapper from "@components/layout/Wrapper";
 import Head from "./components/Head";
 import { Ionicons } from "@expo/vector-icons";
 import GlobalStyle from "@styles/GlobalStyles";
 import Form from "./components/Form";
-import BottomSheet, { BottomSheetBackdrop, BottomSheetBackdropProps } from "@gorhom/bottom-sheet";
+import BottomSheet, {
+  BottomSheetBackdrop,
+  BottomSheetBackdropProps,
+  useBottomSheetDynamicSnapPoints,
+  BottomSheetView,
+} from "@gorhom/bottom-sheet";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useAppDispatch, useAppSelector } from "hooks/useRedux";
 import { addForm } from "utils/redux/slices/formSlice";
@@ -14,6 +28,12 @@ export default function HomeScreen() {
   const bottomSheetRef = useRef<BottomSheet>(null);
   const form = useAppSelector((state) => state.form);
   const dispatch = useAppDispatch();
+  const { height } = Dimensions.get("window");
+
+  const initialSnapPoints = useMemo(() => ["CONTENT_HEIGHT"], []);
+
+  const { animatedHandleHeight, animatedSnapPoints, animatedContentHeight, handleContentLayout } =
+    useBottomSheetDynamicSnapPoints(initialSnapPoints);
 
   const renderBackdrop = useCallback(
     (props: BottomSheetBackdropProps) => (
@@ -49,30 +69,34 @@ export default function HomeScreen() {
       <BottomSheet
         ref={bottomSheetRef}
         index={-1}
-        snapPoints={["30%"]}
         handleStyle={{ display: "none" }}
+        snapPoints={animatedSnapPoints}
+        handleHeight={animatedHandleHeight}
+        contentHeight={animatedContentHeight}
         enablePanDownToClose
         backdropComponent={renderBackdrop}
       >
-        <View style={bottomSheet.container}>
-          <Text style={bottomSheet.title}>옵션 유형</Text>
-          <TouchableOpacity style={optionType.item}>
-            <MaterialIcons name="short-text" size={24} />
-            <Text style={optionType.label}>단답형</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={optionType.item}>
-            <MaterialIcons name="notes" size={24} />
-            <Text style={optionType.label}>장문형</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={optionType.item}>
-            <MaterialIcons name="radio-button-checked" size={24} />
-            <Text style={optionType.label}>객관식 질문</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={optionType.item}>
-            <MaterialIcons name="check-box" size={24} />
-            <Text style={optionType.label}>체크박스</Text>
-          </TouchableOpacity>
-        </View>
+        <BottomSheetView onLayout={handleContentLayout} style={{ maxHeight: height * 0.9 }}>
+          <View style={bottomSheet.container}>
+            <Text style={bottomSheet.title}>옵션 유형</Text>
+            <TouchableOpacity style={optionType.item}>
+              <MaterialIcons name="short-text" size={24} />
+              <Text style={optionType.label}>단답형</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={optionType.item}>
+              <MaterialIcons name="notes" size={24} />
+              <Text style={optionType.label}>장문형</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={optionType.item}>
+              <MaterialIcons name="radio-button-checked" size={24} />
+              <Text style={optionType.label}>객관식 질문</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={optionType.item}>
+              <MaterialIcons name="check-box" size={24} />
+              <Text style={optionType.label}>체크박스</Text>
+            </TouchableOpacity>
+          </View>
+        </BottomSheetView>
       </BottomSheet>
     </>
   );
