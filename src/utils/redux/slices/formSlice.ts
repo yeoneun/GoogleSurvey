@@ -60,7 +60,9 @@ export const formSlice = createSlice({
     },
     copyForm: (state, action: PayloadAction<number>) => {
       console.log("copyForm", action.payload);
-      state.forms.splice(action.payload, 0, state.forms[action.payload]);
+      const newForm = state.forms[action.payload];
+      newForm.focused = false;
+      state.forms.splice(action.payload, 0, newForm);
     },
     setFormQuestion: (state, action: PayloadAction<{ index: number; value: string }>) => {
       console.log("setFormQuestion", action.payload);
@@ -114,6 +116,10 @@ export const formSlice = createSlice({
     },
     setAllFormUnFocused: (state) => {
       console.log("setFormAllUnFocused");
+      const isFocusedForm = state.forms.some((item) => item.focused);
+      if (!isFocusedForm) {
+        return;
+      }
       state.forms.forEach((item) => (item.focused = false));
     },
   },
