@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import { SafeAreaView, Text, View, StyleSheet, Pressable, ScrollView } from "react-native";
-import KeyboardAvoidingView from "@components/layout/KeyboardAvoidingView";
 import Wrapper from "@components/layout/Wrapper";
 import Container from "@screens/create/components/Container";
 import { useAppDispatch, useAppSelector } from "hooks/useRedux";
@@ -12,6 +11,8 @@ import TextInput from "@components/form/TextInput";
 import Radio from "@components/form/Radio";
 import Check from "@components/form/Check";
 import { reset, setPreviewValues } from "utils/redux/slices/previewSlice";
+import { KeyboardAwareFlatList } from "react-native-keyboard-aware-scroll-view";
+import { FormProps } from "utils/redux/slices/formSlice";
 
 type Props = NativeStackScreenProps<ScreenParams, "Preview">;
 
@@ -54,10 +55,9 @@ export default function Preview(props: Props) {
     dispatch(setPreviewValues({ formIndex, values: currentValues }));
   };
 
-  const renderForm = (formIndex: number) => {
-    const currentForm = form.forms[formIndex];
+  const renderForm = (item: FormProps, formIndex: number) => {
     const currentValue = values[formIndex];
-    switch (currentForm.type) {
+    switch (item.type) {
       case "shortText":
         return (
           <TextInput
@@ -79,7 +79,7 @@ export default function Preview(props: Props) {
       case "radio":
         return (
           <>
-            {currentForm.options?.map((option, index) => (
+            {item.options?.map((option, index) => (
               <View
                 key={`preview_form_${formIndex}_option_${index}`}
                 style={{ flexDirection: "row", alignItems: "center" }}
@@ -92,7 +92,7 @@ export default function Preview(props: Props) {
                 />
               </View>
             ))}
-            {currentForm.useEtc && (
+            {item.useEtc && (
               <View style={{ flexDirection: "row", alignItems: "center" }}>
                 <Radio
                   value={"option_기타"}
@@ -107,7 +107,7 @@ export default function Preview(props: Props) {
       case "check":
         return (
           <>
-            {currentForm.options?.map((option, index) => (
+            {item.options?.map((option, index) => (
               <View
                 key={`preview_form_${formIndex}_option_${index}`}
                 style={{ flexDirection: "row", alignItems: "center" }}
@@ -120,7 +120,7 @@ export default function Preview(props: Props) {
                 />
               </View>
             ))}
-            {currentForm.useEtc && (
+            {item.useEtc && (
               <View style={{ flexDirection: "row", alignItems: "center" }}>
                 <Check
                   value={"option_기타"}
@@ -135,52 +135,64 @@ export default function Preview(props: Props) {
     }
   };
 
+  const renderItem = ({ item, index }: { item: FormProps; index: number }) => {
+    return (
+      <Container style={list.item}>
+        <Text style={list.question}>
+          {item.question} {item.necessary && <Text style={list.necessary}>*</Text>}
+        </Text>
+        {renderForm(item, index)}
+      </Container>
+    );
+  };
+
   return (
-    <KeyboardAvoidingView>
-      <ScrollView contentInsetAdjustmentBehavior="automatic">
+    <>
+      <View style={header.container}>
         <SafeAreaView>
-          <View style={header.container}>
+          <View style={header.inner}>
             <Pressable onPress={goBack} style={header.backButton}>
-              <Ionicons name="arrow-back" size={24} />
+              <Ionicons name="arrow-back" size={20} />
             </Pressable>
             <Text style={header.title}>미리보기</Text>
           </View>
         </SafeAreaView>
+      </View>
 
-        <Wrapper>
-          <Container style={title.container}>
-            <Text style={title.title}>{form.title}</Text>
-            {form.description && <Text style={title.description}>{form.description}</Text>}
+      <Wrapper style={list.container}>
+        <KeyboardAwareFlatList
+          data={form.forms}
+          renderItem={renderItem}
+          keyExtractor={(_, index) => `previewForm_${index}`}
+          ListHeaderComponent={
+            <Container style={title.container}>
+              <Text style={title.title}>{form.title}</Text>
+              {form.description && <Text style={title.description}>{form.description}</Text>}
 
-            {form.forms.some((item) => item.necessary) && (
-              <View style={title.necessaryArea}>
-                <Text style={title.necessary}>* 표시는 필수 항목임</Text>
-              </View>
-            )}
-          </Container>
-
-          {form.forms.map((item, index) => (
-            <Container key={`preview_form_${index}`} style={content.container}>
-              <Text style={content.question}>
-                {item.question} {item.necessary && <Text style={content.necessary}>*</Text>}
-              </Text>
-              {renderForm(index)}
+              {form.forms.some((item) => item.necessary) && (
+                <View style={title.necessaryArea}>
+                  <Text style={title.necessary}>* 표시는 필수 항목임</Text>
+                </View>
+              )}
             </Container>
-          ))}
-        </Wrapper>
-      </ScrollView>
-    </KeyboardAvoidingView>
+          }
+          ListFooterComponent={<View style={{ height: 30 }} />}
+          showsVerticalScrollIndicator={false}
+        />
+      </Wrapper>
+    </>
   );
 }
 
-const content = StyleSheet.create({
-  container: { marginTop: 12 },
+const list = StyleSheet.create({
+  container: { flex: 1 },
+  item: { marginTop: 12 },
   question: { fontSize: 15, marginBottom: 20 },
   necessary: { color: GlobalStyle.red.color },
 });
 
 const title = StyleSheet.create({
-  container: { borderTopColor: GlobalStyle.point.color, borderTopWidth: 8 },
+  container: { borderTopColor: GlobalStyle.point.color, borderTopWidth: 8, marginTop: 20 },
   title: { fontSize: 28 },
   description: { fontSize: 15, marginTop: 23 },
   necessaryArea: { borderTopWidth: 1, borderColor: GlobalStyle.gray.borderColor, marginTop: 15, paddingTop: 15 },
@@ -188,7 +200,8 @@ const title = StyleSheet.create({
 });
 
 const header = StyleSheet.create({
-  container: { flexDirection: "row", alignItems: "center", height: 50, marginBottom: 5 },
+  container: { backgroundColor: GlobalStyle.point.backgroundColor },
+  inner: { flexDirection: "row", alignItems: "center", height: 50 },
   backButton: { width: 50, height: 50, alignItems: "center", justifyContent: "center" },
-  title: { fontSize: 17, fontWeight: "bold" },
+  title: { fontSize: 16, fontWeight: "bold" },
 });
