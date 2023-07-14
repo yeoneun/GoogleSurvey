@@ -1,5 +1,5 @@
 import React, { useRef } from "react";
-import { StyleSheet, Animated } from "react-native";
+import { StyleSheet, Animated, SafeAreaView } from "react-native";
 import GlobalStyle from "styles/GlobalStyles";
 import TextDecoration from "@components/form/TextDecoration";
 import Container from "./Container";
@@ -89,40 +89,42 @@ export default function Head() {
   };
 
   return (
-    <Wrapper>
-      <Container focused={headFocused} style={layout.container}>
-        <Animated.View style={{ marginTop: titleAreaMarginTop }}>
-          <TextInput
-            value={form.title}
-            onChangeText={dispatchTitle}
-            placeholder="설문지 제목"
-            style={layout.titleInput}
-            onFocus={onTitleFocus}
-            onBlur={onTitleBlur}
-            multiline
-            scrollEnabled={false}
-          />
-          <Animated.View style={[layout.textDecorationArea, { height: titleAreaDecorationHeight }]}>
-            <TextDecoration />
+    <SafeAreaView>
+      <Wrapper>
+        <Container focused={headFocused} style={layout.container}>
+          <Animated.View style={{ marginTop: titleAreaMarginTop }}>
+            <TextInput
+              value={form.title}
+              onChangeText={dispatchTitle}
+              placeholder="설문지 제목"
+              style={layout.titleInput}
+              onFocus={onTitleFocus}
+              onBlur={onTitleBlur}
+              multiline
+              scrollEnabled={false}
+            />
+            <Animated.View style={[layout.textDecorationArea, { height: titleAreaDecorationHeight }]}>
+              <TextDecoration />
+            </Animated.View>
           </Animated.View>
-        </Animated.View>
-        <Animated.View style={{ marginTop: descriptionAreaMarginTop }}>
-          <TextInput
-            value={form.description}
-            onChangeText={dispatchDescription}
-            placeholder="설문지 설명"
-            onFocus={onDescriptonFocus}
-            onBlur={onDescriptonBlur}
-            style={layout.descriptionInput}
-            multiline
-            scrollEnabled={false}
-          />
-          <Animated.View style={[layout.textDecorationArea, { height: descriptionAreaDecorationHeight }]}>
-            <TextDecoration />
+          <Animated.View style={{ marginTop: descriptionAreaMarginTop }}>
+            <TextInput
+              value={form.description}
+              onChangeText={dispatchDescription}
+              placeholder="설문지 설명"
+              onFocus={onDescriptonFocus}
+              onBlur={onDescriptonBlur}
+              style={layout.descriptionInput}
+              multiline
+              scrollEnabled={false}
+            />
+            <Animated.View style={[layout.textDecorationArea, { height: descriptionAreaDecorationHeight }]}>
+              <TextDecoration />
+            </Animated.View>
           </Animated.View>
-        </Animated.View>
-      </Container>
-    </Wrapper>
+        </Container>
+      </Wrapper>
+    </SafeAreaView>
   );
 }
 

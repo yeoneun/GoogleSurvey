@@ -1,5 +1,13 @@
-import React, { useEffect, useRef, useState } from "react";
-import { Pressable, StyleSheet, Text, TextInput as RNTextInput, TouchableOpacity, View, Keyboard } from "react-native";
+import React, { useEffect, useRef } from "react";
+import {
+  Pressable,
+  StyleSheet,
+  Text,
+  TextInput as RNTextInput,
+  TouchableOpacity,
+  View,
+  TouchableWithoutFeedback,
+} from "react-native";
 import TextInput from "@components/form/TextInput";
 import Container from "./Container";
 import { Ionicons } from "@expo/vector-icons";
@@ -28,10 +36,11 @@ import Wrapper from "@components/layout/Wrapper";
 interface Props {
   index: number;
   onPressOptionType: (formIndex: number) => void;
+  onPressBlock: () => void;
 }
 
 export default function FormList(props: Props) {
-  const { index, onPressOptionType } = props;
+  const { index, onPressOptionType, onPressBlock } = props;
   const { showActionSheetWithOptions } = useActionSheet();
   const form = useAppSelector((state) => state.form);
   const currentForm = form.forms[index];
@@ -174,43 +183,45 @@ export default function FormList(props: Props) {
   };
 
   return (
-    <Wrapper>
-      <Container focused={focused} style={[layout.container, focused && layout.focusedContainer]}>
-        <TextInput
-          ref={(el) => (inputs.current[0] = el)}
-          value={currentForm.question}
-          onChangeText={dispatchQuestion}
-          placeholder="질문"
-          style={layout.question}
-          multiline
-          scrollEnabled={false}
-          onFocus={focusForm}
-        />
+    <Pressable onPress={onPressBlock}>
+      <Wrapper>
+        <Container focused={focused} style={[layout.container, focused && layout.focusedContainer]}>
+          <TextInput
+            ref={(el) => (inputs.current[0] = el)}
+            value={currentForm.question}
+            onChangeText={dispatchQuestion}
+            placeholder="질문"
+            style={layout.question}
+            multiline
+            scrollEnabled={false}
+            onFocus={focusForm}
+          />
 
-        {focused && (
-          <View style={layout.toolArea}>
-            <TouchableOpacity style={layout.imageButton}>
-              <Ionicons name="image" size={24} color={GlobalStyle.lineIcon.color} />
-            </TouchableOpacity>
-            <FormTypeSelector onPress={() => onPressOptionType(index)} type={currentForm.type} />
-          </View>
-        )}
-
-        <View style={options.container}>{renderForms()}</View>
-
-        {focused && (
-          <View style={bottom.container}>
-            <View style={[bottom.button, necessary.container]}>
-              <Text style={necessary.text}>필수</Text>
-              <Switch onValueChange={toggleNecessary} value={currentForm.necessary} style={necessary.switch} />
+          {focused && (
+            <View style={layout.toolArea}>
+              <TouchableOpacity style={layout.imageButton}>
+                <Ionicons name="image" size={24} color={GlobalStyle.lineIcon.color} />
+              </TouchableOpacity>
+              <FormTypeSelector onPress={() => onPressOptionType(index)} type={currentForm.type} />
             </View>
-            <Pressable onPress={onPressMore} style={[bottom.button, bottom.moreButton]}>
-              <MaterialCommunityIcons name="dots-vertical" size={24} color={GlobalStyle.lineIcon.color} />
-            </Pressable>
-          </View>
-        )}
-      </Container>
-    </Wrapper>
+          )}
+
+          <View style={options.container}>{renderForms()}</View>
+
+          {focused && (
+            <View style={bottom.container}>
+              <View style={[bottom.button, necessary.container]}>
+                <Text style={necessary.text}>필수</Text>
+                <Switch onValueChange={toggleNecessary} value={currentForm.necessary} style={necessary.switch} />
+              </View>
+              <Pressable onPress={onPressMore} style={[bottom.button, bottom.moreButton]}>
+                <MaterialCommunityIcons name="dots-vertical" size={24} color={GlobalStyle.lineIcon.color} />
+              </Pressable>
+            </View>
+          )}
+        </Container>
+      </Wrapper>
+    </Pressable>
   );
 }
 

@@ -1,17 +1,17 @@
 import React, { useRef } from "react";
-import { SafeAreaView, StyleSheet, Text, TouchableOpacity, Keyboard, Pressable, ScrollView } from "react-native";
-import KeyboardAvoidingView from "@components/layout/KeyboardAvoidingView";
+import { StyleSheet, Text, TouchableOpacity, Keyboard, View } from "react-native";
 import Head from "./components/Head";
 import Form from "./components/Form";
 import BottomSheet from "@components/actionSheet/BottomSheet";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useAppDispatch, useAppSelector } from "hooks/useRedux";
-import { FormTypes, setFormType } from "utils/redux/slices/formSlice";
+import { FormProps, FormTypes, setFormType } from "utils/redux/slices/formSlice";
 import RNBottomSheet from "@gorhom/bottom-sheet/lib/typescript/components/bottomSheet/BottomSheet";
 import FloatingButtons from "./components/FloatingButtons";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { ScreenParams } from "../../../App";
 import { setFocusedFormIndex } from "utils/redux/slices/focusSlice";
+import { KeyboardAwareFlatList } from "react-native-keyboard-aware-scroll-view";
 
 type Props = NativeStackScreenProps<ScreenParams, "Create">;
 
@@ -42,21 +42,21 @@ export default function Create(props: Props) {
     navigation.navigate("Preview");
   };
 
+  const renderItem = ({ index }: { index: number }) => {
+    return <Form index={index} onPressOptionType={openFormTypeSheet} onPressBlock={resetFocusedFormIndex} />;
+  };
+
   return (
     <>
-      <KeyboardAvoidingView>
-        <ScrollView contentInsetAdjustmentBehavior="automatic" bounces={false}>
-          <SafeAreaView style={{ flex: 1 }}>
-            <Head />
-          </SafeAreaView>
-          <Pressable onPress={resetFocusedFormIndex} style={layout.formContainer}>
-            {form.forms.map((_, index) => (
-              <Form key={`form_${index}`} index={index} onPressOptionType={openFormTypeSheet} />
-            ))}
-          </Pressable>
-        </ScrollView>
-        <FloatingButtons navigateToPreview={goPreview} />
-      </KeyboardAvoidingView>
+      <KeyboardAwareFlatList
+        data={form.forms}
+        renderItem={renderItem}
+        keyExtractor={(_, index) => `form_${index}`}
+        ListHeaderComponent={<Head />}
+        ListFooterComponent={<View style={{ height: 100 }} />}
+        contentInsetAdjustmentBehavior="automatic"
+      />
+      <FloatingButtons navigateToPreview={goPreview} />
 
       <BottomSheet ref={formTypeSheet} title="설문 유형">
         <TouchableOpacity onPress={() => dispatchFormType("shortText")} style={optionType.item}>
@@ -79,10 +79,6 @@ export default function Create(props: Props) {
     </>
   );
 }
-
-const layout = StyleSheet.create({
-  formContainer: { paddingBottom: 100 },
-});
 
 const optionType = StyleSheet.create({
   item: { flexDirection: "row", alignItems: "center", height: 42 },
