@@ -1,13 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import {
-  Pressable,
-  StyleSheet,
-  Text,
-  TextInput as RNTextInput,
-  TouchableOpacity,
-  View,
-  TouchableWithoutFeedback,
-} from "react-native";
+import { Pressable, StyleSheet, Text, TextInput as RNTextInput, TouchableOpacity, View } from "react-native";
 import TextInput from "@components/form/TextInput";
 import Container from "./Container";
 import { Ionicons } from "@expo/vector-icons";
@@ -139,6 +131,7 @@ export default function FormList(props: Props) {
                   }}
                   onFocusInput={focusForm}
                   onSumitLabel={() => inputs.current[optionIndex + 2]?.focus()}
+                  isFormFocused={focused}
                 />
                 {focused && currentForm.options!.length > 1 && (
                   <TouchableOpacity
@@ -195,6 +188,7 @@ export default function FormList(props: Props) {
             multiline
             scrollEnabled={false}
             onFocus={focusForm}
+            underline={focused}
           />
 
           {focused && (

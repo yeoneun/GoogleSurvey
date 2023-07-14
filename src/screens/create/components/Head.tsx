@@ -27,6 +27,10 @@ export default function Head() {
     dispatch(setHeadFocused(true));
   };
 
+  const onHeadBlur = () => {
+    dispatch(setHeadFocused(false));
+  };
+
   const onTitleFocus = () => {
     onHeadFocused();
     Animated.parallel([
@@ -43,7 +47,7 @@ export default function Head() {
     ]).start();
   };
   const onTitleBlur = () => {
-    dispatch(setHeadFocused(false));
+    onHeadBlur();
     Animated.parallel([
       Animated.timing(titleAreaMarginTop, {
         toValue: 0,
@@ -73,7 +77,7 @@ export default function Head() {
     ]).start();
   };
   const onDescriptonBlur = () => {
-    dispatch(setHeadFocused(false));
+    onHeadBlur();
     Animated.parallel([
       Animated.timing(descriptionAreaMarginTop, {
         toValue: 10,
@@ -102,6 +106,7 @@ export default function Head() {
               onBlur={onTitleBlur}
               multiline
               scrollEnabled={false}
+              underline={headFocused}
             />
             <Animated.View style={[layout.textDecorationArea, { height: titleAreaDecorationHeight }]}>
               <TextDecoration />
@@ -117,6 +122,7 @@ export default function Head() {
               style={layout.descriptionInput}
               multiline
               scrollEnabled={false}
+              underline={headFocused}
             />
             <Animated.View style={[layout.textDecorationArea, { height: descriptionAreaDecorationHeight }]}>
               <TextDecoration />
@@ -143,7 +149,5 @@ const layout = StyleSheet.create({
   descriptionInput: {
     fontSize: 15,
     paddingVertical: 15 * 0.2,
-    borderBottomWidth: 1,
-    borderColor: GlobalStyle.gray.borderColor,
   },
 });

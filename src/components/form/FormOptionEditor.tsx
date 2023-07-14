@@ -6,13 +6,14 @@ import GlobalStyle from "@styles/GlobalStyles";
 
 interface Props {
   value: string;
+  isFormFocused: boolean;
   setValue: (value: string) => void;
   onFocusInput: () => void;
   onSumitLabel?: () => void;
 }
 
 const FormOptionEditor = forwardRef((props: Props, ref?: Ref<RNTextInput>) => {
-  const { value, setValue, onFocusInput, onSumitLabel } = props;
+  const { value, isFormFocused, setValue, onFocusInput, onSumitLabel } = props;
   const imageButtonWidth = useRef(new Animated.Value(0)).current;
 
   const onFocus = () => {
@@ -42,6 +43,7 @@ const FormOptionEditor = forwardRef((props: Props, ref?: Ref<RNTextInput>) => {
         onBlur={onBlur}
         style={layout.textInput}
         onSubmitEditing={onSumitLabel}
+        underline={isFormFocused}
       />
       <Animated.View style={[layout.iconButton, { width: imageButtonWidth }]}>
         <Ionicons name="image" size={20} color={GlobalStyle.lineIcon.color} />

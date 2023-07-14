@@ -8,10 +8,11 @@ interface Props extends TextInputProps {
   onBlur?: () => void;
   disabled?: boolean;
   containerStyle?: ViewStyle;
+  underline?: boolean;
 }
 
 const TextInput = forwardRef((props: Props, ref?: Ref<RNTextInput>) => {
-  const { onFocus, onBlur, disabled, containerStyle } = props;
+  const { onFocus, onBlur, disabled, containerStyle, underline } = props;
   const [focused, setFocused] = useState(false);
 
   const handleFocus = (): void => {
@@ -34,6 +35,7 @@ const TextInput = forwardRef((props: Props, ref?: Ref<RNTextInput>) => {
         onBlur={handleBlur}
         style={[
           layout.textInput,
+          underline && layout.underlinedTextInput,
           focused && layout.focusedTextInput,
           disabled && layout.disabledTextInput,
           props.style,
@@ -60,6 +62,8 @@ const layout = StyleSheet.create({
   textInput: {
     fontSize: 14,
     paddingVertical: 14 * 0.5,
+  },
+  underlinedTextInput: {
     borderBottomWidth: 1,
     borderColor: GlobalStyle.gray.borderColor,
   },
