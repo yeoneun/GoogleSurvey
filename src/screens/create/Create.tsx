@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
-import { SafeAreaView, StyleSheet, Text, TouchableOpacity, Keyboard, Pressable } from "react-native";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { SafeAreaView, StyleSheet, Text, TouchableOpacity, Keyboard, Pressable, ScrollView } from "react-native";
+import KeyboardAvoidingView from "@components/layout/KeyboardAvoidingView";
 import Head from "./components/Head";
 import Form from "./components/Form";
 import BottomSheet from "@components/actionSheet/BottomSheet";
@@ -44,24 +44,19 @@ export default function Create(props: Props) {
 
   return (
     <>
-      <KeyboardAwareScrollView
-        extraHeight={100}
-        enableOnAndroid
-        enableResetScrollToCoords
-        keyboardShouldPersistTaps="handled"
-        contentInsetAdjustmentBehavior="automatic"
-      >
-        <SafeAreaView>
-          <Head />
+      <KeyboardAvoidingView>
+        <ScrollView contentInsetAdjustmentBehavior="automatic">
+          <SafeAreaView style={{ flex: 1 }}>
+            <Head />
+          </SafeAreaView>
           <Pressable onPress={resetFocusedFormIndex} style={layout.formContainer}>
-            {form.forms.map((item, index) => (
+            {form.forms.map((_, index) => (
               <Form key={`form_${index}`} index={index} onPressOptionType={openFormTypeSheet} />
             ))}
           </Pressable>
-        </SafeAreaView>
-      </KeyboardAwareScrollView>
-
-      <FloatingButtons navigateToPreview={goPreview} />
+        </ScrollView>
+        <FloatingButtons navigateToPreview={goPreview} />
+      </KeyboardAvoidingView>
 
       <BottomSheet ref={formTypeSheet} title="설문 유형">
         <TouchableOpacity onPress={() => dispatchFormType("shortText")} style={optionType.item}>

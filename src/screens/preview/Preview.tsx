@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
-import { SafeAreaView, Text, View, StyleSheet, Pressable } from "react-native";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { SafeAreaView, Text, View, StyleSheet, Pressable, ScrollView } from "react-native";
+import KeyboardAvoidingView from "@components/layout/KeyboardAvoidingView";
 import Wrapper from "@components/layout/Wrapper";
 import Container from "@screens/create/components/Container";
 import { useAppDispatch, useAppSelector } from "hooks/useRedux";
@@ -132,20 +132,16 @@ export default function Preview(props: Props) {
   };
 
   return (
-    <KeyboardAwareScrollView
-      extraHeight={100}
-      enableOnAndroid={true}
-      enableResetScrollToCoords={true}
-      keyboardShouldPersistTaps="handled"
-      contentInsetAdjustmentBehavior="automatic"
-    >
-      <SafeAreaView>
-        <View style={header.container}>
-          <Pressable onPress={goBack} style={header.backButton}>
-            <Ionicons name="arrow-back" size={24} />
-          </Pressable>
-          <Text style={header.title}>미리보기</Text>
-        </View>
+    <KeyboardAvoidingView>
+      <ScrollView contentInsetAdjustmentBehavior="automatic">
+        <SafeAreaView>
+          <View style={header.container}>
+            <Pressable onPress={goBack} style={header.backButton}>
+              <Ionicons name="arrow-back" size={24} />
+            </Pressable>
+            <Text style={header.title}>미리보기</Text>
+          </View>
+        </SafeAreaView>
 
         <Wrapper>
           <Container style={title.container}>
@@ -168,8 +164,8 @@ export default function Preview(props: Props) {
             </Container>
           ))}
         </Wrapper>
-      </SafeAreaView>
-    </KeyboardAwareScrollView>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 }
 
