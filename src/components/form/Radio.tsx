@@ -4,20 +4,20 @@ import { View, StyleSheet, Text, Pressable } from "react-native";
 
 interface Props {
   checked?: boolean;
-  setChecked?: (checked: boolean) => void;
+  onPress?: (label: string) => void;
   label?: string;
   disabled?: boolean;
 }
 
 export default function Radio(props: Props) {
-  const { checked, setChecked, label, disabled } = props;
+  const { checked, onPress, label, disabled } = props;
 
   if (!label) {
     return <View style={layout.button} />;
   }
 
   return (
-    <Pressable onPress={() => setChecked && setChecked(!checked)} disabled={disabled} style={layout.container}>
+    <Pressable onPress={() => onPress && onPress(label)} disabled={disabled} style={layout.container}>
       <View style={[layout.button, checked && layout.buttonOn]}>{checked && <View style={layout.on} />}</View>
       <Text style={layout.label}>{label}</Text>
     </Pressable>

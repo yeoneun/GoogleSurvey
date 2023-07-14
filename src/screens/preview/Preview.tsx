@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { SafeAreaView, Text, View, StyleSheet, Pressable } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import Wrapper from "@components/layout/Wrapper";
@@ -17,17 +17,70 @@ type Props = NativeStackScreenProps<ScreenParams, "Preview">;
 export default function Preview(props: Props) {
   const { navigation } = props;
   const form = useAppSelector((state) => state.form);
+  const [formValues, setFormValues] = useState<string[][]>();
+
+  useEffect(() => {
+    setFormValues(Array.from(new Array(form.forms.length), () => []));
+  }, [form]);
 
   const goBack = () => {
     navigation.pop();
   };
+
+  const onChangeText = (formIndex: number, value: string) => {
+    if (!formValues) {
+      return;
+    }
+    const values = [...formValues];
+    values[formIndex] = [value];
+    setFormValues(values);
+  };
+  const onPressRadio = (formIndex: number, value: string) => {
+    if (!formValues) {
+      return;
+    }
+    const values = [...formValues];
+    values[formIndex] = [value];
+    setFormValues(values);
+  };
+  const onPressCheck = (formIndex: number, value: string) => {
+    if (!formValues) {
+      return;
+    }
+    const values = [...formValues];
+    const index = values[formIndex].indexOf(value);
+    console.log(index);
+    if (index > -1) {
+      values[formIndex].splice(index, 1);
+      console.log(values);
+    } else {
+      values[formIndex].push(value);
+    }
+    setFormValues(values);
+  };
+
   const renderForm = (formIndex: number) => {
     const currentForm = form.forms[formIndex];
+
     switch (currentForm.type) {
       case "shortText":
-        return <TextInput placeholder="내 답변" />;
+        return (
+          <TextInput
+            value={formValues && formValues[formIndex][0]}
+            onChangeText={(value) => onChangeText(formIndex, value)}
+            placeholder="내 답변"
+          />
+        );
       case "longText":
-        return <TextInput placeholder="내 답변" multiline scrollEnabled={false} />;
+        return (
+          <TextInput
+            value={formValues && formValues[formIndex][0]}
+            onChangeText={(value) => onChangeText(formIndex, value)}
+            placeholder="내 답변"
+            multiline
+            scrollEnabled={false}
+          />
+        );
       case "radio":
         return (
           <>
@@ -36,12 +89,20 @@ export default function Preview(props: Props) {
                 key={`preview_form_${formIndex}_option_${index}`}
                 style={{ flexDirection: "row", alignItems: "center" }}
               >
-                <Radio label={option.label} />
+                <Radio
+                  label={option.label}
+                  onPress={(value) => onPressRadio(formIndex, value)}
+                  checked={formValues && formValues[formIndex][0] === option.label}
+                />
               </View>
             ))}
             {currentForm.useEtc && (
               <View style={{ flexDirection: "row", alignItems: "center" }}>
-                <Radio label={"기타"} />
+                <Radio
+                  label={"기타"}
+                  onPress={(value) => onPressRadio(formIndex, value)}
+                  checked={formValues && formValues[formIndex][0] === "기타"}
+                />
               </View>
             )}
           </>
@@ -54,7 +115,11 @@ export default function Preview(props: Props) {
                 key={`preview_form_${formIndex}_option_${index}`}
                 style={{ flexDirection: "row", alignItems: "center" }}
               >
-                <Check label={option.label} />
+                <Check
+                  label={option.label}
+                  onPress={() => onPressCheck(formIndex, option.label)}
+                  checked={formValues && formValues[formIndex].includes(option.label)}
+                />
               </View>
             ))}
             {currentForm.useEtc && (
