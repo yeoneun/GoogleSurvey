@@ -7,14 +7,14 @@ interface Props {
 
 export default function CustomKeyboardAvoidingView(props: Props) {
   const { children } = props;
-  const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
+  let isKeyboardVisible = false;
 
   useEffect(() => {
     const keyboardWillShowListener = Keyboard.addListener("keyboardWillShow", () => {
-      setIsKeyboardVisible(true);
+      isKeyboardVisible = true;
     });
     const keyboardWillHideListener = Keyboard.addListener("keyboardWillHide", () => {
-      setIsKeyboardVisible(true);
+      isKeyboardVisible = false;
     });
     return () => {
       keyboardWillShowListener.remove();

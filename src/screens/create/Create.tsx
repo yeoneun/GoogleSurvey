@@ -45,7 +45,7 @@ export default function Create(props: Props) {
   return (
     <>
       <KeyboardAvoidingView>
-        <ScrollView contentInsetAdjustmentBehavior="automatic">
+        <ScrollView contentInsetAdjustmentBehavior="automatic" bounces={false}>
           <SafeAreaView style={{ flex: 1 }}>
             <Head />
           </SafeAreaView>
