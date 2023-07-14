@@ -19,7 +19,10 @@ const layout = StyleSheet.create({
     padding: 27,
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: GlobalStyle.gray.borderColor,
+    borderLeftColor: GlobalStyle.gray.borderColor,
+    borderTopColor: GlobalStyle.gray.borderColor,
+    borderBottomColor: GlobalStyle.gray.borderColor,
+    borderRightColor: GlobalStyle.gray.borderColor,
   },
   focusedContainer: {
     borderLeftWidth: 8,
