@@ -39,6 +39,11 @@ export default function Preview(props: Props) {
                 <Radio label={option.label} />
               </View>
             ))}
+            {currentForm.useEtc && (
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <Radio label={"기타"} />
+              </View>
+            )}
           </>
         );
       case "check":
@@ -52,6 +57,11 @@ export default function Preview(props: Props) {
                 <Check label={option.label} />
               </View>
             ))}
+            {currentForm.useEtc && (
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <Check label={"기타"} />
+              </View>
+            )}
           </>
         );
     }
