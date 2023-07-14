@@ -23,6 +23,7 @@ export default function Preview(props: Props) {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
+    console.log(form.forms);
     return () => {
       dispatch(reset());
     };

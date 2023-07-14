@@ -1,17 +1,18 @@
 import React, { useRef } from "react";
-import { StyleSheet, Text, TouchableOpacity, Keyboard, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, Keyboard, View, KeyboardAvoidingView, Dimensions } from "react-native";
 import Head from "./components/Head";
 import Form from "./components/Form";
 import BottomSheet from "@components/actionSheet/BottomSheet";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useAppDispatch, useAppSelector } from "hooks/useRedux";
-import { FormProps, FormTypes, setFormType } from "utils/redux/slices/formSlice";
+import { FormProps, FormTypes, setFormIndex, setFormType } from "utils/redux/slices/formSlice";
 import RNBottomSheet from "@gorhom/bottom-sheet/lib/typescript/components/bottomSheet/BottomSheet";
 import FloatingButtons from "./components/FloatingButtons";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { ScreenParams } from "../../../App";
 import { setFocusedFormIndex } from "utils/redux/slices/focusSlice";
-import { KeyboardAwareFlatList } from "react-native-keyboard-aware-scroll-view";
+import DraggableFlatList, { RenderItemParams } from "react-native-draggable-flatlist";
+import Constants from "expo-constants";
 
 type Props = NativeStackScreenProps<ScreenParams, "Create">;
 
@@ -41,21 +42,38 @@ export default function Create(props: Props) {
     resetFocusedFormIndex();
     navigation.navigate("Preview");
   };
+  const moveForm = (props: { from: number; to: number }) => {
+    resetFocusedFormIndex();
+    dispatch(setFormIndex(props));
+  };
 
-  const renderItem = ({ index }: { index: number }) => {
-    return <Form index={index} onPressOptionType={openFormTypeSheet} onPressBlock={resetFocusedFormIndex} />;
+  const renderItem = ({ getIndex, drag }: RenderItemParams<FormProps>) => {
+    let index = getIndex();
+    if (!index) {
+      index = 0;
+    }
+    return (
+      <Form index={index} onPressOptionType={openFormTypeSheet} onPressBlock={resetFocusedFormIndex} drag={drag} />
+    );
   };
 
   return (
     <>
-      <KeyboardAwareFlatList
-        data={form.forms}
-        renderItem={renderItem}
-        keyExtractor={(_, index) => `form_${index}`}
-        ListHeaderComponent={<Head />}
-        ListFooterComponent={<View style={{ height: 100 }} />}
-        contentInsetAdjustmentBehavior="automatic"
-      />
+      <KeyboardAvoidingView behavior="padding" contentContainerStyle={{ backgroundColor: "pink", flex: 1 }}>
+        <DraggableFlatList
+          data={form.forms}
+          renderItem={renderItem}
+          keyExtractor={(_, index) => `form_${index}`}
+          ListHeaderComponent={<Head />}
+          ListFooterComponent={<View style={{ height: 100 }} />}
+          contentInsetAdjustmentBehavior="automatic"
+          onDragEnd={({ from, to }) => moveForm({ from, to })}
+          contentContainerStyle={{
+            minHeight: Dimensions.get("window").height - Constants.statusBarHeight,
+          }}
+          showsVerticalScrollIndicator={false}
+        />
+      </KeyboardAvoidingView>
       <FloatingButtons navigateToPreview={goPreview} />
 
       <BottomSheet ref={formTypeSheet} title="설문 유형">

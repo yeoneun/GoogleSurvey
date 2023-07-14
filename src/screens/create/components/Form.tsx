@@ -4,7 +4,7 @@ import TextInput from "@components/form/TextInput";
 import Container from "./Container";
 import { Ionicons } from "@expo/vector-icons";
 import GlobalStyle from "@styles/GlobalStyles";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import Switch from "@components/form/Switch";
 import Radio from "@components/form/Radio";
 import { useActionSheet } from "@expo/react-native-action-sheet";
@@ -29,10 +29,11 @@ interface Props {
   index: number;
   onPressOptionType: (formIndex: number) => void;
   onPressBlock: () => void;
+  drag: () => void;
 }
 
 export default function FormList(props: Props) {
-  const { index, onPressOptionType, onPressBlock } = props;
+  const { index, onPressOptionType, onPressBlock, drag } = props;
   const { showActionSheetWithOptions } = useActionSheet();
   const form = useAppSelector((state) => state.form);
   const currentForm = form.forms[index];
@@ -179,6 +180,10 @@ export default function FormList(props: Props) {
     <Pressable onPress={onPressBlock}>
       <Wrapper>
         <Container focused={focused} style={[layout.container, focused && layout.focusedContainer]}>
+          <TouchableOpacity onPressIn={drag} style={moveHandle.container}>
+            <MaterialIcons name="drag-handle" size={24} color={GlobalStyle.gray.borderColor} />
+          </TouchableOpacity>
+
           <TextInput
             ref={(el) => (inputs.current[0] = el)}
             value={currentForm.question}
@@ -219,6 +224,16 @@ export default function FormList(props: Props) {
   );
 }
 
+const moveHandle = StyleSheet.create({
+  container: {
+    alignItems: "center",
+    justifyContent: "center",
+    alignSelf: "center",
+    width: 60,
+    height: 20,
+  },
+});
+
 const options = StyleSheet.create({
   container: { marginTop: 16 },
   item: { flexDirection: "row", alignItems: "center", marginBottom: 12 },
@@ -255,7 +270,7 @@ const necessary = StyleSheet.create({
 });
 
 const layout = StyleSheet.create({
-  container: { marginTop: 12, position: "relative" },
+  container: { marginTop: 12, position: "relative", paddingTop: 0 },
   focusedContainer: { paddingBottom: 0 },
   question: {
     fontSize: 16,

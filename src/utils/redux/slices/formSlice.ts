@@ -103,6 +103,11 @@ export const formSlice = createSlice({
       const { index, value } = action.payload;
       state.forms[index].necessary = value;
     },
+    setFormIndex: (state, action: PayloadAction<{ from: number; to: number }>) => {
+      console.log("setFormIndex", action.payload);
+      const { from, to } = action.payload;
+      state.forms.splice(to, 0, state.forms.splice(from, 1)[0]);
+    },
   },
 });
 
@@ -119,6 +124,7 @@ export const {
   removeFormOption,
   setFormOptionLabel,
   setNecessary,
+  setFormIndex,
 } = formSlice.actions;
 
 export const selectForm = (state: RootState) => state.form;
