@@ -38,16 +38,14 @@ export default function FormList(props: Props) {
   const questionInput = useRef<RNTextInput>(null);
   const { focusedFormIndex } = useAppSelector((state) => state.focus);
   const dispatch = useAppDispatch();
-
-  const [focused, setFocused] = useState(false);
+  let focused = focusedFormIndex === index;
 
   useEffect(() => {
     if (focusedFormIndex === index) {
-      setFocused(true);
-      questionInput.current?.focus();
+      focused = true;
       return;
     }
-    setFocused(false);
+    focused = false;
   }, [focusedFormIndex]);
 
   const dispatchQuestion = (value: string) => {
@@ -117,7 +115,7 @@ export default function FormList(props: Props) {
           <>
             {currentForm.options!.map((option, optionIndex) => (
               <View key={`form_${index}_option_${optionIndex}`} style={options.item}>
-                {currentForm.type === "radio" ? <Radio disabled /> : <Check />}
+                {currentForm.type === "radio" ? <Radio disabled /> : <Check disabled />}
                 <FormOptionEditor
                   value={option.label}
                   setValue={(value: string) => {
@@ -134,7 +132,7 @@ export default function FormList(props: Props) {
             ))}
             {currentForm.useEtc && (
               <Pressable onPress={focusForm} style={[options.item, options.smallItem]}>
-                {currentForm.type === "radio" ? <Radio /> : <Check />}
+                {currentForm.type === "radio" ? <Radio disabled /> : <Check disabled />}
                 <View style={options.etcLabelContainer}>
                   <Text style={[options.smallItemLabel, options.etcLabel]}>기타...</Text>
                   {focused && (
@@ -147,7 +145,7 @@ export default function FormList(props: Props) {
             )}
             {focused && (
               <View style={[options.item, options.smallItem]}>
-                {currentForm.type === "radio" ? <Radio /> : <Check />}
+                {currentForm.type === "radio" ? <Radio disabled /> : <Check disabled />}
                 <Text style={options.smallItemLabel}>
                   <Text onPress={addOption} style={options.addOption}>
                     옵션 추가
