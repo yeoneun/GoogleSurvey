@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Pressable, StyleSheet, Text, TextInput as RNTextInput, TouchableOpacity, View } from "react-native";
+import { Pressable, StyleSheet, Text, TextInput as RNTextInput, TouchableOpacity, View, Keyboard } from "react-native";
 import TextInput from "@components/form/TextInput";
 import Container from "./Container";
 import { Ionicons } from "@expo/vector-icons";
@@ -43,6 +43,10 @@ export default function FormList(props: Props) {
   useEffect(() => {
     if (focusedFormIndex === index) {
       focused = true;
+      const focusedInput = inputs.current.findIndex((item) => item?.isFocused());
+      if (focusedInput < 0) {
+        inputs.current[0]?.focus();
+      }
       return;
     }
     focused = false;
