@@ -35,7 +35,7 @@ export default function FormList(props: Props) {
   const { showActionSheetWithOptions } = useActionSheet();
   const form = useAppSelector((state) => state.form);
   const currentForm = form.forms[index];
-  const questionInput = useRef<RNTextInput>(null);
+  const inputs = useRef<(RNTextInput | null)[]>([]);
   const { focusedFormIndex } = useAppSelector((state) => state.focus);
   const dispatch = useAppDispatch();
   let focused = focusedFormIndex === index;
@@ -117,11 +117,13 @@ export default function FormList(props: Props) {
               <View key={`form_${index}_option_${optionIndex}`} style={options.item}>
                 {currentForm.type === "radio" ? <Radio disabled /> : <Check disabled />}
                 <FormOptionEditor
+                  ref={(el) => (inputs.current[optionIndex + 1] = el)}
                   value={option.label}
                   setValue={(value: string) => {
                     dispatchFormOptionLabel(optionIndex, value);
                   }}
                   onFocusInput={focusForm}
+                  onSumitLabel={() => inputs.current[optionIndex + 2]?.focus()}
                 />
                 {focused && currentForm.options!.length > 1 && (
                   <TouchableOpacity onPress={() => removeOption(optionIndex)} style={options.iconButton}>
@@ -166,7 +168,7 @@ export default function FormList(props: Props) {
     <Wrapper>
       <Container focused={focused} style={[layout.container, focused && layout.focusedContainer]}>
         <TextInput
-          ref={questionInput}
+          ref={(el) => (inputs.current[0] = el)}
           value={currentForm.question}
           onChangeText={dispatchQuestion}
           placeholder="질문"

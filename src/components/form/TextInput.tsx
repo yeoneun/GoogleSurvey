@@ -10,7 +10,7 @@ interface Props extends TextInputProps {
   containerStyle?: ViewStyle;
 }
 
-const TextInput = forwardRef((props: Props, ref: Ref<RNTextInput>) => {
+const TextInput = forwardRef((props: Props, ref?: Ref<RNTextInput>) => {
   const { onFocus, onBlur, disabled, containerStyle } = props;
   const [focused, setFocused] = useState(false);
 
@@ -28,7 +28,7 @@ const TextInput = forwardRef((props: Props, ref: Ref<RNTextInput>) => {
     <View style={[layout.container, containerStyle]}>
       <RNTextInput
         {...props}
-        ref={ref}
+        ref={ref || undefined}
         placeholderTextColor={GlobalStyle.placeholder.color}
         onFocus={handleFocus}
         onBlur={handleBlur}
