@@ -27,14 +27,14 @@ export default function FloatingButtons(props: Props) {
   };
 
   useEffect(() => {
-    const keyboardDidShowListener = Keyboard.addListener("keyboardDidShow", () => {
+    const keyboardWillShowListener = Keyboard.addListener("keyboardWillShow", () => {
       Animated.timing(floatingButtonBottom, {
         toValue: -100,
         duration: 1,
         useNativeDriver: false,
       }).start();
     });
-    const keyboardDidHideListener = Keyboard.addListener("keyboardDidHide", () => {
+    const keyboardDidWillListener = Keyboard.addListener("keyboardWillHide", () => {
       Animated.timing(floatingButtonBottom, {
         toValue: 30,
         duration: 200,
@@ -43,8 +43,8 @@ export default function FloatingButtons(props: Props) {
     });
 
     return () => {
-      keyboardDidShowListener.remove();
-      keyboardDidHideListener.remove();
+      keyboardWillShowListener.remove();
+      keyboardDidWillListener.remove();
     };
   }, []);
 
