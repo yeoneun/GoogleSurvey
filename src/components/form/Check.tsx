@@ -7,18 +7,19 @@ interface Props {
   checked?: boolean;
   onPress?: (label: string) => void;
   label?: string;
+  value?: string;
   disabled?: boolean;
 }
 
 export default function Check(props: Props) {
-  const { checked, onPress, label, disabled } = props;
+  const { checked, onPress, label, value, disabled } = props;
 
   if (!label) {
     return <View style={layout.button} />;
   }
 
   return (
-    <Pressable onPress={() => onPress && onPress(label)} disabled={disabled} style={layout.container}>
+    <Pressable onPress={() => onPress && value && onPress(value)} disabled={disabled} style={layout.container}>
       <View style={[layout.button, checked && layout.buttonOn]}>
         {checked && <Ionicons name="checkmark-sharp" size={14} color="white" />}
       </View>

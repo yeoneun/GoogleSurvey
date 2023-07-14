@@ -85,18 +85,20 @@ export default function Preview(props: Props) {
                 style={{ flexDirection: "row", alignItems: "center" }}
               >
                 <Radio
+                  value={`option_${index}`}
                   label={option.label}
                   onPress={(value) => onPressRadio(formIndex, value)}
-                  checked={currentValue && currentValue[0] === option.label ? true : false}
+                  checked={currentValue && currentValue[0] === `option_${index}` ? true : false}
                 />
               </View>
             ))}
             {currentForm.useEtc && (
               <View style={{ flexDirection: "row", alignItems: "center" }}>
                 <Radio
+                  value={"option_기타"}
                   label={"기타"}
                   onPress={(value) => onPressRadio(formIndex, value)}
-                  checked={currentValue && currentValue[0] === "기타" ? true : false}
+                  checked={currentValue && currentValue[0] === "option_기타"}
                 />
               </View>
             )}
@@ -111,18 +113,20 @@ export default function Preview(props: Props) {
                 style={{ flexDirection: "row", alignItems: "center" }}
               >
                 <Check
+                  value={`option_${index}`}
                   label={option.label}
-                  onPress={() => onPressCheck(formIndex, option.label)}
-                  checked={currentValue && currentValue.includes(option.label)}
+                  onPress={() => onPressCheck(formIndex, `option_${index}`)}
+                  checked={currentValue && currentValue.includes(`option_${index}`)}
                 />
               </View>
             ))}
             {currentForm.useEtc && (
               <View style={{ flexDirection: "row", alignItems: "center" }}>
                 <Check
+                  value={"option_기타"}
                   label={"기타"}
                   onPress={(value) => onPressCheck(formIndex, value)}
-                  checked={currentValue && currentValue[0] === "기타"}
+                  checked={currentValue && currentValue.includes("option_기타")}
                 />
               </View>
             )}
