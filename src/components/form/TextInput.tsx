@@ -1,5 +1,5 @@
 import GlobalStyle from "@styles/GlobalStyles";
-import React, { useRef } from "react";
+import React, { Ref, forwardRef, useState } from "react";
 import { TextInput as RNTextInput, TextInputProps, StyleSheet, View, ViewStyle } from "react-native";
 import Dash from "react-native-dash";
 
@@ -10,23 +10,17 @@ interface Props extends TextInputProps {
   containerStyle?: ViewStyle;
 }
 
-export default function TextInput(props: Props) {
+const TextInput = forwardRef((props: Props, ref: Ref<RNTextInput>) => {
   const { onFocus, onBlur, disabled, containerStyle } = props;
-  const inputRef = useRef<RNTextInput>(null);
+  const [focused, setFocused] = useState(false);
 
   const handleFocus = (): void => {
-    inputRef.current?.focus();
-    inputRef.current?.setNativeProps({
-      style: [layout.textInput, layout.focusedTextInput, props.style],
-    });
+    setFocused(true);
     onFocus && onFocus();
   };
 
   const handleBlur = (): void => {
-    inputRef.current?.blur();
-    inputRef.current?.setNativeProps({
-      style: [layout.textInput, props.style],
-    });
+    setFocused(false);
     onBlur && onBlur();
   };
 
@@ -34,11 +28,16 @@ export default function TextInput(props: Props) {
     <View style={[layout.container, containerStyle]}>
       <RNTextInput
         {...props}
-        ref={inputRef}
+        ref={ref}
         placeholderTextColor={GlobalStyle.placeholder.color}
         onFocus={handleFocus}
         onBlur={handleBlur}
-        style={[layout.textInput, disabled && layout.disabledTextInput, props.style]}
+        style={[
+          layout.textInput,
+          focused && layout.focusedTextInput,
+          disabled && layout.disabledTextInput,
+          props.style,
+        ]}
         editable={!disabled}
       />
       {disabled && (
@@ -52,7 +51,9 @@ export default function TextInput(props: Props) {
       )}
     </View>
   );
-}
+});
+
+export default TextInput;
 
 const layout = StyleSheet.create({
   container: { flex: 1 },

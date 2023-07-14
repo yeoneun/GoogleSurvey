@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { Pressable, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import React, { useEffect, useRef, useState } from "react";
+import { Pressable, StyleSheet, Text, TextInput as RNTextInput, TouchableOpacity, View } from "react-native";
 import TextInput from "@components/form/TextInput";
 import Container from "./Container";
 import { Ionicons } from "@expo/vector-icons";
@@ -35,6 +35,7 @@ export default function FormList(props: Props) {
   const { showActionSheetWithOptions } = useActionSheet();
   const form = useAppSelector((state) => state.form);
   const currentForm = form.forms[index];
+  const questionInput = useRef<RNTextInput>(null);
   const { focusedFormIndex } = useAppSelector((state) => state.focus);
   const dispatch = useAppDispatch();
 
@@ -43,6 +44,7 @@ export default function FormList(props: Props) {
   useEffect(() => {
     if (focusedFormIndex === index) {
       setFocused(true);
+      questionInput.current?.focus();
       return;
     }
     setFocused(false);
@@ -166,6 +168,7 @@ export default function FormList(props: Props) {
     <Wrapper>
       <Container focused={focused} style={[layout.container, focused && layout.focusedContainer]}>
         <TextInput
+          ref={questionInput}
           value={currentForm.question}
           onChangeText={dispatchQuestion}
           placeholder="질문"
