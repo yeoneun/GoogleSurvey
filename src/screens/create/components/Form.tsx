@@ -23,6 +23,7 @@ import FormTypeSelector from "@components/form/FormTypeSelector";
 import Check from "@components/form/Check";
 import FormOptionEditor from "@components/form/FormOptionEditor";
 import { setFocusedFormIndex } from "utils/redux/slices/focusSlice";
+import Wrapper from "@components/layout/Wrapper";
 
 interface Props {
   index: number;
@@ -33,8 +34,8 @@ export default function FormList(props: Props) {
   const { index, onPressOptionType } = props;
   const { showActionSheetWithOptions } = useActionSheet();
   const form = useAppSelector((state) => state.form);
-  const { focusedFormIndex } = useAppSelector((state) => state.focus);
   const currentForm = form.forms[index];
+  const { focusedFormIndex } = useAppSelector((state) => state.focus);
   const dispatch = useAppDispatch();
 
   const [focused, setFocused] = useState(false);
@@ -101,9 +102,13 @@ export default function FormList(props: Props) {
   const renderForms = () => {
     switch (currentForm.type) {
       case "shortText":
-        return <TextInput placeholder="단답형 텍스트" containerStyle={{ width: "50%" }} disabled />;
+        return (
+          <TextInput placeholder="단답형 텍스트" containerStyle={{ width: "50%" }} onPressIn={focusForm} disabled />
+        );
       case "longText":
-        return <TextInput placeholder="장문형 텍스트" containerStyle={{ width: "80%" }} disabled />;
+        return (
+          <TextInput placeholder="장문형 텍스트" containerStyle={{ width: "80%" }} onPressIn={focusForm} disabled />
+        );
       case "radio":
       case "check":
         return (
@@ -126,7 +131,7 @@ export default function FormList(props: Props) {
               </View>
             ))}
             {currentForm.useEtc && (
-              <View style={[options.item, options.smallItem]}>
+              <Pressable onPress={focusForm} style={[options.item, options.smallItem]}>
                 {currentForm.type === "radio" ? <Radio /> : <Check />}
                 <View style={options.etcLabelContainer}>
                   <Text style={[options.smallItemLabel, options.etcLabel]}>기타...</Text>
@@ -136,7 +141,7 @@ export default function FormList(props: Props) {
                     </TouchableOpacity>
                   )}
                 </View>
-              </View>
+              </Pressable>
             )}
             {focused && (
               <View style={[options.item, options.smallItem]}>
@@ -158,40 +163,42 @@ export default function FormList(props: Props) {
   };
 
   return (
-    <Container focused={focused} style={[layout.container, focused && layout.focusedContainer]}>
-      <TextInput
-        value={currentForm.question}
-        onChangeText={dispatchQuestion}
-        placeholder="질문"
-        style={layout.question}
-        multiline
-        scrollEnabled={false}
-        onFocus={focusForm}
-      />
+    <Wrapper>
+      <Container focused={focused} style={[layout.container, focused && layout.focusedContainer]}>
+        <TextInput
+          value={currentForm.question}
+          onChangeText={dispatchQuestion}
+          placeholder="질문"
+          style={layout.question}
+          multiline
+          scrollEnabled={false}
+          onFocus={focusForm}
+        />
 
-      {focused && (
-        <View style={layout.toolArea}>
-          <TouchableOpacity style={layout.imageButton}>
-            <Ionicons name="image" size={24} color={GlobalStyle.lineIcon.color} />
-          </TouchableOpacity>
-          <FormTypeSelector onPress={() => onPressOptionType(index)} type={currentForm.type} />
-        </View>
-      )}
-
-      <View style={options.container}>{renderForms()}</View>
-
-      {focused && (
-        <View style={bottom.container}>
-          <View style={[bottom.button, necessary.container]}>
-            <Text style={necessary.text}>필수</Text>
-            <Switch onValueChange={toggleNecessary} value={currentForm.necessary} style={necessary.switch} />
+        {focused && (
+          <View style={layout.toolArea}>
+            <TouchableOpacity style={layout.imageButton}>
+              <Ionicons name="image" size={24} color={GlobalStyle.lineIcon.color} />
+            </TouchableOpacity>
+            <FormTypeSelector onPress={() => onPressOptionType(index)} type={currentForm.type} />
           </View>
-          <Pressable onPress={onPressMore} style={[bottom.button, bottom.moreButton]}>
-            <MaterialCommunityIcons name="dots-vertical" size={24} color={GlobalStyle.lineIcon.color} />
-          </Pressable>
-        </View>
-      )}
-    </Container>
+        )}
+
+        <View style={options.container}>{renderForms()}</View>
+
+        {focused && (
+          <View style={bottom.container}>
+            <View style={[bottom.button, necessary.container]}>
+              <Text style={necessary.text}>필수</Text>
+              <Switch onValueChange={toggleNecessary} value={currentForm.necessary} style={necessary.switch} />
+            </View>
+            <Pressable onPress={onPressMore} style={[bottom.button, bottom.moreButton]}>
+              <MaterialCommunityIcons name="dots-vertical" size={24} color={GlobalStyle.lineIcon.color} />
+            </Pressable>
+          </View>
+        )}
+      </Container>
+    </Wrapper>
   );
 }
 

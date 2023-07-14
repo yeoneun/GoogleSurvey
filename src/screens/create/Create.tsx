@@ -1,7 +1,6 @@
 import React, { useRef } from "react";
-import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View, Keyboard } from "react-native";
+import { SafeAreaView, StyleSheet, Text, TouchableOpacity, Keyboard, Pressable } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import Wrapper from "@components/layout/Wrapper";
 import Head from "./components/Head";
 import Form from "./components/Form";
 import BottomSheet from "@components/actionSheet/BottomSheet";
@@ -12,6 +11,7 @@ import RNBottomSheet from "@gorhom/bottom-sheet/lib/typescript/components/bottom
 import FloatingButtons from "./components/FloatingButtons";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { ScreenParams } from "../../../App";
+import { setFocusedFormIndex } from "utils/redux/slices/focusSlice";
 
 type Props = NativeStackScreenProps<ScreenParams, "Create">;
 
@@ -33,7 +33,12 @@ export default function Create(props: Props) {
     dispatch(setFormType({ index: focusedFormIndex, value: type }));
     formTypeSheet.current?.close();
   };
+  const resetFocusedFormIndex = () => {
+    Keyboard.dismiss();
+    dispatch(setFocusedFormIndex(undefined));
+  };
   const goPreview = () => {
+    resetFocusedFormIndex();
     navigation.navigate("Preview");
   };
 
@@ -41,20 +46,18 @@ export default function Create(props: Props) {
     <>
       <KeyboardAwareScrollView
         extraHeight={100}
-        enableOnAndroid={true}
-        enableResetScrollToCoords={true}
+        enableOnAndroid
+        enableResetScrollToCoords
         keyboardShouldPersistTaps="handled"
         contentInsetAdjustmentBehavior="automatic"
       >
         <SafeAreaView>
-          <Wrapper>
-            <Head />
-            <View style={layout.formContainer}>
-              {form.forms.map((item, index) => (
-                <Form key={`form_${index}`} index={index} onPressOptionType={openFormTypeSheet} />
-              ))}
-            </View>
-          </Wrapper>
+          <Head />
+          <Pressable onPress={resetFocusedFormIndex} style={layout.formContainer}>
+            {form.forms.map((item, index) => (
+              <Form key={`form_${index}`} index={index} onPressOptionType={openFormTypeSheet} />
+            ))}
+          </Pressable>
         </SafeAreaView>
       </KeyboardAwareScrollView>
 

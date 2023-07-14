@@ -20,7 +20,7 @@ export const focusSlice = createSlice({
       removeFocusedFormIndex();
       state.headFocused = action.payload;
     },
-    setFocusedFormIndex: (state, action: PayloadAction<number>) => {
+    setFocusedFormIndex: (state, action: PayloadAction<number | undefined>) => {
       console.log("setFocusedFormIndex", action.payload);
       setHeadFocused(false);
       state.focusedFormIndex = action.payload;
