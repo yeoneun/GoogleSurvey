@@ -54,11 +54,13 @@ export default function FormList(props: Props) {
   const toggleNecessary = (value: boolean) => {
     dispatch(setNecessary({ index, value }));
   };
-  const addOption = () => {
-    dispatch(addFormOption({ index }));
+  const addOption = async () => {
+    await dispatch(addFormOption({ index }));
+    inputs.current[inputs.current.length - 1]?.focus();
   };
-  const removeOption = (optionIndex: number) => {
+  const removeOption = (optionIndex: number, refIndex: number) => {
     dispatch(removeFormOption({ index, optionIndex }));
+    inputs.current.splice(refIndex, 1);
   };
   const dispatchFormOptionLabel = (optionIndex: number, value: string) => {
     dispatch(setFormOptionLabel({ index, optionIndex, value }));
@@ -126,7 +128,10 @@ export default function FormList(props: Props) {
                   onSumitLabel={() => inputs.current[optionIndex + 2]?.focus()}
                 />
                 {focused && currentForm.options!.length > 1 && (
-                  <TouchableOpacity onPress={() => removeOption(optionIndex)} style={options.iconButton}>
+                  <TouchableOpacity
+                    onPress={() => removeOption(optionIndex, optionIndex + 1)}
+                    style={options.iconButton}
+                  >
                     <Ionicons name="close" size={24} color={GlobalStyle.lineIcon.color} />
                   </TouchableOpacity>
                 )}
