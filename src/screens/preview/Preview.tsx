@@ -13,6 +13,7 @@ import Check from "@components/form/Check";
 import { reset, setPreviewValues } from "utils/redux/slices/previewSlice";
 import { KeyboardAwareFlatList } from "react-native-keyboard-aware-scroll-view";
 import { FormProps } from "utils/redux/slices/formSlice";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 type Props = NativeStackScreenProps<ScreenParams, "Preview">;
 
@@ -151,12 +152,12 @@ export default function Preview(props: Props) {
     <>
       <View style={header.container}>
         <SafeAreaView>
-          <View style={header.inner}>
-            <Pressable onPress={goBack} style={header.backButton}>
-              <Ionicons name="arrow-back" size={20} />
-            </Pressable>
-            <Text style={header.title}>미리보기</Text>
-          </View>
+          <Wrapper style={header.inner}>
+            <TouchableOpacity onPress={goBack} style={header.backButton}>
+              <Ionicons name="arrow-back" size={16} color={"white"} />
+              <Text style={header.title}>돌아가기</Text>
+            </TouchableOpacity>
+          </Wrapper>
         </SafeAreaView>
       </View>
 
@@ -203,6 +204,14 @@ const title = StyleSheet.create({
 const header = StyleSheet.create({
   container: { backgroundColor: GlobalStyle.point.backgroundColor },
   inner: { flexDirection: "row", alignItems: "center", height: 50 },
-  backButton: { width: 50, height: 50, alignItems: "center", justifyContent: "center" },
-  title: { fontSize: 16, fontWeight: "bold" },
+  backButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: GlobalStyle.point.color,
+    paddingHorizontal: 12,
+    borderRadius: 15,
+    height: 30,
+  },
+  title: { fontSize: 14, fontWeight: "bold", color: "white", marginLeft: 4 },
 });
