@@ -1,12 +1,5 @@
 import React, { useEffect } from "react";
-import {
-  SafeAreaView,
-  Text,
-  View,
-  StyleSheet,
-  Pressable,
-  ScrollView,
-} from "react-native";
+import { SafeAreaView, Text, View, StyleSheet } from "react-native";
 import Wrapper from "@components/layout/Wrapper";
 import Container from "@screens/create/components/Container";
 import { useAppDispatch, useAppSelector } from "hooks/useRedux";
@@ -17,7 +10,11 @@ import { ScreenParams } from "../../../App";
 import TextInput from "@components/form/TextInput";
 import Radio from "@components/form/Radio";
 import Check from "@components/form/Check";
-import { reset, setPreviewValues } from "utils/redux/slices/previewSlice";
+import {
+  reset,
+  setPreviewValues,
+  setPriviewEtcValue,
+} from "utils/redux/slices/previewSlice";
 import { KeyboardAwareFlatList } from "react-native-keyboard-aware-scroll-view";
 import { FormProps } from "utils/redux/slices/formSlice";
 import { TouchableOpacity } from "react-native-gesture-handler";
@@ -27,7 +24,7 @@ type Props = NativeStackScreenProps<ScreenParams, "Preview">;
 export default function Preview(props: Props) {
   const { navigation } = props;
   const form = useAppSelector((state) => state.form);
-  const { values } = useAppSelector((state) => state.preview);
+  const { formValues } = useAppSelector((state) => state.preview);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -45,32 +42,37 @@ export default function Preview(props: Props) {
     dispatch(setPreviewValues({ formIndex, values: [value] }));
   };
 
+  const onChangeEtcValue = (formIndex: number, value: string) => {
+    dispatch(setPriviewEtcValue({ formIndex, value }));
+  };
+
   const onPressRadio = (formIndex: number, value: string) => {
     dispatch(setPreviewValues({ formIndex, values: [value] }));
   };
 
   const onPressCheck = (formIndex: number, value: string) => {
-    let currentValues = values[formIndex] ? [...values[formIndex]] : [];
-    if (currentValues.length > 0) {
-      const index = currentValues.indexOf(value);
+    let values = formValues[formIndex] ? [...formValues[formIndex].values] : [];
+    if (values.length > 0) {
+      const index = values.indexOf(value);
       if (index > -1) {
-        currentValues.splice(index, 1);
+        values.splice(index, 1);
       } else {
-        currentValues.push(value);
+        values.push(value);
       }
     } else {
-      currentValues = [value];
+      values = [value];
     }
-    dispatch(setPreviewValues({ formIndex, values: currentValues }));
+    dispatch(setPreviewValues({ formIndex, values }));
   };
 
   const renderForm = (item: FormProps, formIndex: number) => {
-    const currentValue = values[formIndex];
+    const values = formValues[formIndex].values;
+    const etc = formValues[formIndex].etc;
     switch (item.type) {
       case "shortText":
         return (
           <TextInput
-            value={currentValue && currentValue[0]}
+            value={values && values[0]}
             onChangeText={(value) => onChangeText(formIndex, value)}
             placeholder="내 답변"
           />
@@ -78,7 +80,7 @@ export default function Preview(props: Props) {
       case "longText":
         return (
           <TextInput
-            value={currentValue && currentValue[0]}
+            value={values && values[0]}
             onChangeText={(value) => onChangeText(formIndex, value)}
             placeholder="내 답변"
             multiline
@@ -98,9 +100,7 @@ export default function Preview(props: Props) {
                   label={option.label}
                   onPress={(value) => onPressRadio(formIndex, value)}
                   checked={
-                    currentValue && currentValue[0] === `option_${index}`
-                      ? true
-                      : false
+                    values && values[0] === `option_${index}` ? true : false
                   }
                 />
               </View>
@@ -111,8 +111,12 @@ export default function Preview(props: Props) {
                   value={"option_기타"}
                   label={"기타"}
                   onPress={(value) => onPressRadio(formIndex, value)}
-                  checked={currentValue && currentValue[0] === "option_기타"}
+                  checked={values && values[0] === "option_기타"}
                   useTextInput
+                  etcValue={etc}
+                  onChangeEtcValue={(value) =>
+                    onChangeEtcValue(formIndex, value)
+                  }
                 />
               </View>
             )}
@@ -130,9 +134,7 @@ export default function Preview(props: Props) {
                   value={`option_${index}`}
                   label={option.label}
                   onPress={() => onPressCheck(formIndex, `option_${index}`)}
-                  checked={
-                    currentValue && currentValue.includes(`option_${index}`)
-                  }
+                  checked={values && values.includes(`option_${index}`)}
                 />
               </View>
             ))}
@@ -142,7 +144,7 @@ export default function Preview(props: Props) {
                   value={"option_기타"}
                   label={"기타"}
                   onPress={(value) => onPressCheck(formIndex, value)}
-                  checked={currentValue && currentValue.includes("option_기타")}
+                  checked={values && values.includes("option_기타")}
                   useTextInput
                 />
               </View>

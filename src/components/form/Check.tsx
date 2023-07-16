@@ -17,10 +17,21 @@ interface Props {
   value?: string;
   disabled?: boolean;
   useTextInput?: boolean;
+  etcValue?: string;
+  onChangeEtcValue?: (etc: string) => void;
 }
 
 export default function Check(props: Props) {
-  const { checked, onPress, label, value, disabled, useTextInput } = props;
+  const {
+    checked,
+    onPress,
+    label,
+    value,
+    disabled,
+    useTextInput,
+    etcValue,
+    onChangeEtcValue,
+  } = props;
   const textInput = useRef<RNTextInput>(null);
 
   if (!label) {
@@ -35,9 +46,10 @@ export default function Check(props: Props) {
   }, [checked]);
 
   const onChangeText = () => {
-    if (checked || !onPress || !value) {
+    if (checked || !onPress || !value || !onChangeEtcValue) {
       return;
     }
+    onChangeEtcValue(value);
     onPress(value);
   };
 
@@ -54,6 +66,7 @@ export default function Check(props: Props) {
       {useTextInput && (
         <TextInput
           ref={textInput}
+          value={etcValue}
           onChangeText={onChangeText}
           underline
           style={{ marginLeft: 15 }}

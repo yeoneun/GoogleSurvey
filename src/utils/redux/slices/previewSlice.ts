@@ -2,11 +2,14 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import type { RootState } from "../store";
 
 type PreviewState = {
-  values: string[][];
+  formValues: {
+    values: string[];
+    etc: string;
+  }[];
 };
 
 const initialState: PreviewState = {
-  values: [],
+  formValues: [],
 };
 
 export const previewSlice = createSlice({
@@ -15,17 +18,29 @@ export const previewSlice = createSlice({
   reducers: {
     reset: (state) => {
       console.log("reset");
-      state.values = [];
+      state.formValues = [];
     },
-    setPreviewValues: (state, action: PayloadAction<{ formIndex: number; values: string[] }>) => {
+    setPreviewValues: (
+      state,
+      action: PayloadAction<{ formIndex: number; values: string[] }>
+    ) => {
       console.log("setPreviewValues", action.payload);
       const { formIndex, values } = action.payload;
-      state.values[formIndex] = values;
+      state.formValues[formIndex].values = values;
+    },
+    setPriviewEtcValue: (
+      state,
+      action: PayloadAction<{ formIndex: number; value: string }>
+    ) => {
+      console.log("setPriviewEtcValue", action.payload);
+      const { formIndex, value } = action.payload;
+      state.formValues[formIndex].etc = value;
     },
   },
 });
 
-export const { reset, setPreviewValues } = previewSlice.actions;
+export const { reset, setPreviewValues, setPriviewEtcValue } =
+  previewSlice.actions;
 
 export const selectPreview = (state: RootState) => state.preview;
 
