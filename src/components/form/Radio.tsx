@@ -1,4 +1,3 @@
-import GlobalStyle from "@styles/GlobalStyles";
 import React, { useEffect, useRef } from "react";
 import {
   View,
@@ -7,6 +6,7 @@ import {
   Pressable,
   TextInput as RNTextInput,
 } from "react-native";
+import GlobalStyle from "@styles/GlobalStyles";
 import TextInput from "./TextInput";
 
 interface Props {

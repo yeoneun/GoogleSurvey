@@ -1,4 +1,3 @@
-import GlobalStyle from "@styles/GlobalStyles";
 import React, { useEffect, useRef } from "react";
 import {
   View,
@@ -7,6 +6,7 @@ import {
   Text,
   TextInput as RNTextInput,
 } from "react-native";
+import GlobalStyle from "@styles/GlobalStyles";
 import { Ionicons } from "@expo/vector-icons";
 import TextInput from "./TextInput";
 
