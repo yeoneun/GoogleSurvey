@@ -1,5 +1,12 @@
 import React, { useEffect } from "react";
-import { SafeAreaView, Text, View, StyleSheet, Pressable, ScrollView } from "react-native";
+import {
+  SafeAreaView,
+  Text,
+  View,
+  StyleSheet,
+  Pressable,
+  ScrollView,
+} from "react-native";
 import Wrapper from "@components/layout/Wrapper";
 import Container from "@screens/create/components/Container";
 import { useAppDispatch, useAppSelector } from "hooks/useRedux";
@@ -90,17 +97,22 @@ export default function Preview(props: Props) {
                   value={`option_${index}`}
                   label={option.label}
                   onPress={(value) => onPressRadio(formIndex, value)}
-                  checked={currentValue && currentValue[0] === `option_${index}` ? true : false}
+                  checked={
+                    currentValue && currentValue[0] === `option_${index}`
+                      ? true
+                      : false
+                  }
                 />
               </View>
             ))}
             {item.useEtc && (
-              <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <View>
                 <Radio
                   value={"option_기타"}
                   label={"기타"}
                   onPress={(value) => onPressRadio(formIndex, value)}
                   checked={currentValue && currentValue[0] === "option_기타"}
+                  useTextInput
                 />
               </View>
             )}
@@ -118,7 +130,9 @@ export default function Preview(props: Props) {
                   value={`option_${index}`}
                   label={option.label}
                   onPress={() => onPressCheck(formIndex, `option_${index}`)}
-                  checked={currentValue && currentValue.includes(`option_${index}`)}
+                  checked={
+                    currentValue && currentValue.includes(`option_${index}`)
+                  }
                 />
               </View>
             ))}
@@ -129,6 +143,7 @@ export default function Preview(props: Props) {
                   label={"기타"}
                   onPress={(value) => onPressCheck(formIndex, value)}
                   checked={currentValue && currentValue.includes("option_기타")}
+                  useTextInput
                 />
               </View>
             )}
@@ -141,7 +156,8 @@ export default function Preview(props: Props) {
     return (
       <Container style={list.item}>
         <Text style={list.question}>
-          {item.question} {item.necessary && <Text style={list.necessary}>*</Text>}
+          {item.question}{" "}
+          {item.necessary && <Text style={list.necessary}>*</Text>}
         </Text>
         {renderForm(item, index)}
       </Container>
@@ -169,7 +185,9 @@ export default function Preview(props: Props) {
           ListHeaderComponent={
             <Container style={title.container}>
               <Text style={title.title}>{form.title}</Text>
-              {form.description && <Text style={title.description}>{form.description}</Text>}
+              {form.description && (
+                <Text style={title.description}>{form.description}</Text>
+              )}
 
               {form.forms.some((item) => item.necessary) && (
                 <View style={title.necessaryArea}>
@@ -194,10 +212,19 @@ const list = StyleSheet.create({
 });
 
 const title = StyleSheet.create({
-  container: { borderTopColor: GlobalStyle.point.color, borderTopWidth: 8, marginTop: 20 },
+  container: {
+    borderTopColor: GlobalStyle.point.color,
+    borderTopWidth: 8,
+    marginTop: 20,
+  },
   title: { fontSize: 28 },
   description: { fontSize: 15, marginTop: 23 },
-  necessaryArea: { borderTopWidth: 1, borderColor: GlobalStyle.gray.borderColor, marginTop: 15, paddingTop: 15 },
+  necessaryArea: {
+    borderTopWidth: 1,
+    borderColor: GlobalStyle.gray.borderColor,
+    marginTop: 15,
+    paddingTop: 15,
+  },
   necessary: { color: GlobalStyle.red.color },
 });
 

@@ -1,6 +1,13 @@
 import GlobalStyle from "@styles/GlobalStyles";
-import React from "react";
-import { View, StyleSheet, Text, Pressable } from "react-native";
+import React, { useEffect, useRef } from "react";
+import {
+  View,
+  StyleSheet,
+  Text,
+  Pressable,
+  TextInput as RNTextInput,
+} from "react-native";
+import TextInput from "./TextInput";
 
 interface Props {
   checked?: boolean;
@@ -8,19 +15,49 @@ interface Props {
   label?: string;
   value?: string;
   disabled?: boolean;
+  useTextInput?: boolean;
 }
 
 export default function Radio(props: Props) {
-  const { checked, onPress, label, value, disabled } = props;
+  const { checked, onPress, label, value, disabled, useTextInput } = props;
+  const text = useRef<RNTextInput>(null);
 
   if (!label) {
     return <View style={layout.button} />;
   }
 
+  useEffect(() => {
+    if (!checked) {
+      return;
+    }
+    text.current?.focus();
+  }, [checked]);
+
+  const onChangeText = () => {
+    if (checked || !onPress || !value) {
+      return;
+    }
+    onPress(value);
+  };
+
   return (
-    <Pressable onPress={() => onPress && value && onPress(value)} disabled={disabled} style={layout.container}>
-      <View style={[layout.button, checked && layout.buttonOn]}>{checked && <View style={layout.on} />}</View>
+    <Pressable
+      onPress={() => onPress && value && onPress(value)}
+      disabled={disabled}
+      style={layout.container}
+    >
+      <View style={[layout.button, checked && layout.buttonOn]}>
+        {checked && <View style={layout.on} />}
+      </View>
       <Text style={layout.label}>{label}</Text>
+      {useTextInput && (
+        <TextInput
+          ref={text}
+          onChangeText={onChangeText}
+          underline
+          style={{ marginLeft: 15 }}
+        />
+      )}
     </Pressable>
   );
 }
@@ -52,6 +89,5 @@ const layout = StyleSheet.create({
   label: {
     fontSize: 15,
     marginLeft: 15,
-    flex: 1,
   },
 });
