@@ -72,6 +72,7 @@ export default function Create(props: Props) {
             minHeight: Dimensions.get("window").height - Constants.statusBarHeight,
           }}
           showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled"
         />
       </KeyboardAvoidingView>
       <FloatingButtons navigateToPreview={goPreview} />

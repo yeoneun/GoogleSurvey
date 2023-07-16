@@ -176,11 +176,18 @@ export default function FormList(props: Props) {
     }
   };
 
+  const onStartDrag = () => {
+    for (const input of inputs.current) {
+      input?.blur();
+    }
+    drag();
+  };
+
   return (
     <Pressable onPress={onPressBlock}>
       <Wrapper>
         <Container focused={focused} style={[layout.container, focused && layout.focusedContainer]}>
-          <TouchableOpacity onPressIn={drag} style={moveHandle.container}>
+          <TouchableOpacity onPressIn={onStartDrag} style={moveHandle.container}>
             <MaterialIcons name="drag-handle" size={24} color={GlobalStyle.gray.borderColor} />
           </TouchableOpacity>
 
